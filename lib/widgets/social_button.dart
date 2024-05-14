@@ -5,11 +5,13 @@ class SocialButton extends StatelessWidget {
     super.key,
     required this.text,
     required this.onPressed,
+    this.icon,
     this.color,
   });
 
   final String text;
   final VoidCallback onPressed;
+  final Widget? icon;
   final Color? color;
 
   @override
@@ -17,7 +19,7 @@ class SocialButton extends StatelessWidget {
     return TextButton.icon(
         onPressed: () {},
         label: Text(text),
-        icon: const Icon(Icons.accessible_forward),
+        icon: icon,
         style: TextButton.styleFrom(
           backgroundColor: color,
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
