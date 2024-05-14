@@ -5,16 +5,15 @@ import 'package:hsma_cpd_project/widgets/social_button.dart';
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
-  void loginWithCredentials() {
-    const username = "pedro";
-    const password = "123456";
-
+  bool loginWithCredentials(String username, String password) {
     if (username == "pedro" && password == "123456") {
       print("Login successful");
-      Navigator.pushNamed(context, '/home');
+      return true;
     } else {
       print("Login failed");
     }
+
+    return false;
   }
 
   @override
@@ -37,7 +36,7 @@ class LoginScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             const FieldInput(
-                label: "Username", hint: "ex. Pedro Pè", obscureText: true),
+                label: "Username", hint: "ex. Pedro Pè", autofocus: true),
             const SizedBox(height: 10),
             const FieldInput(
                 label: "Password", hint: "ex. •••••••••", obscureText: true),
@@ -47,7 +46,21 @@ class LoginScreen extends StatelessWidget {
             //       Navigator.pushNamed(context, '/home');
             //     },
             //     child: const Text('Login')),
-            SocialButton(text: "Login", onPressed: () {}),
+            SocialButton(
+                text: "Login",
+                onPressed: () {
+                  bool logged = loginWithCredentials("pedro", "123456");
+                  if (logged) {
+                    // Navigator.pushNamed(context, '/home');
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const AlertDialog(
+                            content: Text("Login successful"));
+                      },
+                    );
+                  }
+                }),
             const SizedBox(height: 20),
             const Text("or"),
             const SizedBox(height: 20),

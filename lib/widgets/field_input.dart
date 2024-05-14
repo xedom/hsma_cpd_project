@@ -5,12 +5,14 @@ class FieldInput extends StatelessWidget {
     super.key,
     required this.label,
     required this.hint,
-    required this.obscureText,
+    this.obscureText = false,
+    this.autofocus = false,
   });
 
   final String label;
   final String hint;
   final bool obscureText;
+  final bool autofocus;
 
   @override
   Widget build(BuildContext context) {
@@ -19,12 +21,18 @@ class FieldInput extends StatelessWidget {
         maxWidth: 300,
       ),
       child: TextField(
+        controller: TextEditingController(),
+        onChanged: (String value) {
+          if (value.isNotEmpty) {
+          } else {}
+        },
         decoration: InputDecoration(
-          border: OutlineInputBorder(),
+          border: const OutlineInputBorder(),
           labelText: label,
           hintText: hint,
         ),
         obscureText: obscureText,
+        autofocus: autofocus,
       ),
     );
   }

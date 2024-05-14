@@ -17,7 +17,7 @@ class SocialButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton.icon(
-        onPressed: () {},
+        onPressed: onPressed,
         label: Text(text),
         icon: icon,
         style: TextButton.styleFrom(
