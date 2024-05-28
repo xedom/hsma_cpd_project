@@ -1,9 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hsma_cpd_project/screens/home.dart';
 import 'package:hsma_cpd_project/screens/login.dart';
 
 void main() {
-  runApp(const MyApp());
+  // runApp(const MyApp());
+  runApp(MaterialApp.router(
+    routerConfig: router,
+  ));
 }
+
+final router = GoRouter(
+  routes: [
+    GoRoute(
+      path: '/',
+      // pageBuilder: (context, state) {
+      //   return const HomePage();
+      // },
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(title: const Text('Home')),
+        );
+      },
+      routes: [
+        GoRoute(
+          path: '/login',
+          builder: (context, state) {
+            return Scaffold(
+              appBar: AppBar(title: const Text('Login')),
+            );
+          },
+        ),
+        GoRoute(
+          path: '/home',
+          builder: (context, state) {
+            return Scaffold(
+              appBar: AppBar(title: const Text('Home')),
+            );
+          },
+        ),
+      ],
+    ),
+  ],
+);
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
