@@ -55,10 +55,11 @@ class LoginScreen extends StatelessWidget {
                     showDialog(
                       context: context,
                       builder: (context) {
-                        return const AlertDialog(
-                            content: Text("Login successful"));
+                        return const AlertDialog(content: Text("Login successful"));
                       },
                     );
+                    
+                    Navigator.pushNamed(context, '/home');
                   }
                 }),
             const SizedBox(height: 20),
