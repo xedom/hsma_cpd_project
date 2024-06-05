@@ -15,11 +15,16 @@ class HomePage extends StatelessWidget {
             Text('Home Page'),
 
             TextButton(onPressed: () {
-              Navigator.pushNamed(context, '/profile');
+              // Navigator.pushNamed(context, '/profile');
+              // context.go('/profile');
             }, child: Text('Profile')),
             
             TextButton(onPressed: () {
-              Navigator.pushNamed(context, '/logout');
+              // Navigator.pushNamed(context, '/login');
+            }, child: Text('Login')),
+            
+            TextButton(onPressed: () {
+              // Navigator.pushNamed(context, '/logout');
             }, child: Text('Logout')),
             
           ],
