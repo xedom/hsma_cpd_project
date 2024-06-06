@@ -1,7 +1,6 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfilePage extends StatelessWidget {
   @override
@@ -17,21 +16,24 @@ class ProfilePage extends StatelessWidget {
             const Text('Profile Page'),
             const SizedBox(height: 20),
             const Text('Name: Pedro Pè'),
-            const Text('Email: ',
-                // style: TextStyle(color: Theme.of(context).colorScheme.primary)
+            const Text(
+              'Email: ',
+              // style: TextStyle(color: Theme.of(context).colorScheme.primary)
             ),
-            const Text('Phone: ',
-                // style: TextStyle(color: Theme.of(context).colorScheme.primary)
-            ),
-
-            TextButton(
-              onPressed: () {Navigator.pushNamed(context, '/home');},
-              child: const Text('Home')
+            const Text(
+              'Phone: ',
+              // style: TextStyle(color: Theme.of(context).colorScheme.primary)
             ),
             TextButton(
-              onPressed: () {Navigator.pushNamed(context, '/logout');},
-              child: const Text('logout')
-            ),
+                onPressed: () {
+                  GoRouter.of(context).go('/home');
+                },
+                child: const Text('Home')),
+            TextButton(
+                onPressed: () {
+                  GoRouter.of(context).go('/logout');
+                },
+                child: const Text('logout')),
           ],
         ),
       ),
