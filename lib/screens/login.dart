@@ -1,67 +1,68 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:hsma_cpd_project/providers/auth.dart';
 import 'package:hsma_cpd_project/widgets/field_input.dart';
 import 'package:hsma_cpd_project/widgets/social_button.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
-  bool loginWithCredentials(String username, String password) {
-    if (username == "pedro" && password == "123456") {
-      print("Login successful");
-      return true;
-    } else {
-      print("Login failed");
-    }
+  @override
+  _LoginScreen createState() => _LoginScreen();
+}
 
-    return false;
+class _LoginScreen extends State<LoginScreen> {
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  void submit() {
+    Provider.of<AuthProvider>(context, listen: false).login(
+      usernameController.text,
+      passwordController.text,
+    );
+
+    if (usernameController.text == "pedro" &&
+        passwordController.text == "1234") {
+      GoRouter.of(context).go('/home');
+    }
+  }
+
+  @override
+  void dispose() {
+    usernameController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Login'),
-      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children: [
             const Text(
               'Login',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-            const FieldInput(
-                label: "Username", hint: "ex. Pedro Pè", autofocus: true),
+            FieldInput(
+                label: "Username",
+                hint: "ex. pedro",
+                controller: usernameController,
+                autofocus: true),
             const SizedBox(height: 10),
-            const FieldInput(
-                label: "Password", hint: "ex. •••••••••", obscureText: true),
+            FieldInput(
+                label: "Password",
+                hint: "ex. •••••••••",
+                controller: passwordController,
+                obscureText: true),
             const SizedBox(height: 10),
             // TextButton(
-            //     onPressed: () {
-            //       Navigator.pushNamed(context, '/home');
-            //     },
+            //     onPressed: () { Navigator.pushNamed(context, '/home'); },
             //     child: const Text('Login')),
-            SocialButton(
-                text: "Login",
-                onPressed: () {
-                  bool logged = loginWithCredentials("pedro", "123456");
-                  if (logged) {
-                    // Navigator.pushNamed(context, '/home');
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return const AlertDialog(content: Text("Login successful"));
-                      },
-                    );
-                    
-                    Navigator.pushNamed(context, '/home');
-                  }
-                }),
+            SocialButton(text: "Login", onPressed: submit),
             const SizedBox(height: 20),
             const Text("or"),
             const SizedBox(height: 20),

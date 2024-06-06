@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hsma_cpd_project/screens/game_coinflip.dart';
+import 'package:hsma_cpd_project/screens/coins.dart';
+import 'package:hsma_cpd_project/screens/game_crash.dart';
+import 'package:hsma_cpd_project/screens/game_hilo.dart';
+import 'package:hsma_cpd_project/screens/game_roulette.dart';
 import 'package:hsma_cpd_project/screens/home.dart';
 import 'package:hsma_cpd_project/screens/login.dart';
 import 'package:hsma_cpd_project/screens/profile.dart';
-import 'package:hsma_cpd_project/widgets/bottom_navbar_shell.dart';
+import 'package:hsma_cpd_project/widgets/app_shell.dart';
 
 void main() {
   runApp(const MyApp());
-  // runApp(MaterialApp.router(routerConfig: router));
 }
 
 final router = GoRouter(
@@ -19,10 +23,34 @@ final router = GoRouter(
       },
       routes: [
         GoRoute(
-          name:
-              'home', // Optional, add name to your routes. Allows you navigate by name instead of path
+          name: 'home',
           path: '/home',
-          builder: (context, state) => HomePage(),
+          builder: (context, state) => const HomePage(),
+        ),
+        GoRoute(
+          name: 'roulette',
+          path: '/roulette',
+          builder: (context, state) => GameRoulettePage(),
+        ),
+        GoRoute(
+          name: 'coin-flip',
+          path: '/coin-flip',
+          builder: (context, state) => GameCoinFlipPage(),
+        ),
+        GoRoute(
+          name: 'crash',
+          path: '/crash',
+          builder: (context, state) => const GameCrashPage(),
+        ),
+        GoRoute(
+          name: 'hi-lo',
+          path: '/hi-lo',
+          builder: (context, state) => GameHiLoPage(),
+        ),
+        GoRoute(
+          name: 'profile',
+          path: '/profile',
+          builder: (context, state) => ProfilePage(),
         ),
         GoRoute(
           name: 'login',
@@ -30,10 +58,11 @@ final router = GoRouter(
           builder: (context, state) => const LoginScreen(),
         ),
         GoRoute(
-          name: 'profile',
-          path: '/profile',
-          builder: (context, state) => ProfilePage(),
-        ),
+          name: 'coins',
+          path: '/coins',
+          builder: (context, state) => CoinsPage(),
+        )
+
         // GoRoute(
         //   path: '/fruits/:id',
         //   builder: (context, state) {
@@ -46,27 +75,16 @@ final router = GoRouter(
   ],
 );
 
-// final router = GoRouter(
-//   initialLocation: '/',
-//   routes: [
-//     GoRoute(
-//       path: '/',
-//       // pageBuilder: (context, state) { return const HomePage(); },
-//       builder: (context, state) {return Scaffold(appBar: AppBar(title: const Text('Home')),);
-//       },
-//       routes: [
-//         GoRoute(
-//           path: '/login',
-//           builder: (context, state) {return Scaffold(appBar: AppBar(title: const Text('Login')));},
-//         ),
-//         GoRoute(
-//           path: '/home',
-//           builder: (context, state) {return Scaffold(appBar: AppBar(title: const Text('Home2')));},
-//         ),
-//       ],
-//     ),
-//   ],
-// );
+// path: '/',
+// // pageBuilder: (context, state) { return const HomePage(); },
+// builder: (context, state) {return Scaffold(appBar: AppBar(title: const Text('Home')),);
+// },
+// routes: [
+//   GoRoute(
+//     path: '/login',
+//     builder: (context, state) {return Scaffold(appBar: AppBar(title: const Text('Login')));},
+//   ),
+// ],
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -77,59 +95,12 @@ class MyApp extends StatelessWidget {
       routerConfig: router,
       title: 'CPD App',
       theme: ThemeData(
+        primaryColor: Colors.blue,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         primarySwatch: Colors.blue,
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      // home: const MyHomePage(title: 'CPD App Home Page'),
-      // home: const LoginScreen(),
     );
   }
 }
-
-// class MyHomePage extends StatefulWidget {
-//   const MyHomePage({super.key, required this.title});
-
-//   final String title;
-
-//   @override
-//   State<MyHomePage> createState() => _MyHomePageState();
-// }
-
-// class _MyHomePageState extends State<MyHomePage> {
-//   int _counter = 0;
-
-//   void _incrementCounter() {
-//     setState(() {
-//       _counter++;
-//     });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-//         title: Text(widget.title),
-//       ),
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: <Widget>[
-//             const Text('You have pushed the button this many times:'),
-//             Text(
-//               '$_counter',
-//               style: Theme.of(context).textTheme.headlineMedium,
-//             ),
-//           ],
-//         ),
-//       ),
-//       floatingActionButton: FloatingActionButton(
-//         onPressed: _incrementCounter,
-//         tooltip: 'Increment',
-//         child: const Icon(Icons.add),
-//       ),
-//     );
-//   }
-// }
