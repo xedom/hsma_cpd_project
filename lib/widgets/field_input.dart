@@ -1,27 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class FieldInput extends StatelessWidget {
-  const FieldInput({
+  FieldInput({
     super.key,
     required this.label,
     required this.hint,
     this.obscureText = false,
     this.autofocus = false,
+    required this.controller,
   });
 
   final String label;
   final String hint;
   final bool obscureText;
   final bool autofocus;
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
       constraints: const BoxConstraints(
-        maxWidth: 300,
+        maxWidth: 360,
       ),
       child: TextField(
-        controller: TextEditingController(),
+        controller: controller,
         onChanged: (String value) {
           if (value.isNotEmpty) {
           } else {}
