@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class GameRoulettePage extends StatefulWidget {
+  const GameRoulettePage({super.key});
+
   @override
   _GameRoulettePageState createState() => _GameRoulettePageState();
 }

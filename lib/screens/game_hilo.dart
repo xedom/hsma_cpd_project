@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class GameHiLoPage extends StatefulWidget {
+  const GameHiLoPage({super.key});
+
   @override
   _GameHiLoPageState createState() => _GameHiLoPageState();
 }

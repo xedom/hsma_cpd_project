@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hsma_cpd_project/widgets/coin_packet.dart';
 
 class CoinsPage extends StatelessWidget {
+  CoinsPage({super.key});
+
   final coinPackets = [
     {'amount': 10, 'price': 1.0, 'name': 'Bronze'},
     {'amount': 50, 'price': 4.5, 'name': 'Silver'},

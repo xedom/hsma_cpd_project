@@ -5,6 +5,8 @@ import 'package:hsma_cpd_project/widgets/field_input.dart';
 import 'package:hsma_cpd_project/widgets/social_button.dart';
 
 class ProfilePage extends StatelessWidget {
+  const ProfilePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

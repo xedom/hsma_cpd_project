@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 class AvatarWithFallback extends StatelessWidget {
   final String imageUrl;
   final double radius;
-  IconData fallbackIcon;
+  final IconData fallbackIcon;
 
-  AvatarWithFallback({
+  const AvatarWithFallback({
     super.key,
     required this.imageUrl,
     required this.radius,

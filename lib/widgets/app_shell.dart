@@ -5,7 +5,7 @@ import 'package:hsma_cpd_project/widgets/avatar.dart';
 class BottomNavBarShell extends StatefulWidget {
   final Widget child;
 
-  const BottomNavBarShell({Key? key, required this.child}) : super(key: key);
+  const BottomNavBarShell({super.key, required this.child});
 
   @override
   _BottomNavBarShellState createState() => _BottomNavBarShellState();

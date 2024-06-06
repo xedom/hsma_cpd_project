@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class GameCoinFlipPage extends StatefulWidget {
+  const GameCoinFlipPage({super.key});
+
   @override
   _GameCoinFlipPageState createState() => _GameCoinFlipPageState();
 }
