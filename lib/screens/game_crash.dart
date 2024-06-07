@@ -14,29 +14,31 @@ class GameCrashPage extends StatefulWidget {
 class _GameCrashPageState extends State<GameCrashPage> {
   final TextEditingController _guessController = TextEditingController();
   final TextEditingController _betController = TextEditingController();
-  double _rocketValue = 1.0;
+  double _rocketValue = 0;
   bool _gameRunning = false;
   Timer? _timer;
   double _stopValue = 0;
   String _message = '';
   List<FlSpot> _rocketPath = [const FlSpot(0, 1)];
+  double _guess = 0;
+  double _bet = 0;
 
   void _startGame() {
     setState(() {
-      _rocketValue = 1.0;
+      _rocketValue = 0;
+      _rocketPath = [const FlSpot(0, 0)];
       _gameRunning = true;
-      _stopValue = 1.0 +
-          Random().nextDouble() *
-              19.0; // Random stop value between 1.0 and 20.0
+      _stopValue = 1.0 + Random().nextDouble() * 19.0;
       _message = '';
-      _rocketPath = [const FlSpot(0, 1)];
+      _guess = double.tryParse(_guessController.text) ?? 0;
+      _bet = double.tryParse(_betController.text) ?? 0;
     });
 
     _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       setState(() {
         _rocketValue += 0.1;
-        _rocketPath.add(FlSpot(_rocketValue,
-            _rocketValue * _rocketValue * 0.05)); // Apply curve effect
+        _rocketPath
+            .add(FlSpot(_rocketValue, _rocketValue * _rocketValue * 0.05));
         if (_rocketValue >= _stopValue) {
           _timer?.cancel();
           _gameRunning = false;
@@ -47,17 +49,14 @@ class _GameCrashPageState extends State<GameCrashPage> {
   }
 
   void _checkResult() {
-    double guess = double.tryParse(_guessController.text) ?? 0;
-    double bet = double.tryParse(_betController.text) ?? 0;
-
-    if (_rocketValue >= guess) {
-      double winnings = bet * guess;
+    if (_rocketValue >= _guess) {
+      double winnings = _bet * _guess;
       setState(() {
         _message = 'You won ${winnings.toStringAsFixed(2)} coins!';
       });
     } else {
       setState(() {
-        _message = 'You lost ${bet.toStringAsFixed(2)} coins!';
+        _message = 'You lost ${_bet.toStringAsFixed(2)} coins!';
       });
     }
   }
@@ -73,9 +72,7 @@ class _GameCrashPageState extends State<GameCrashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Crash Game'),
-      ),
+      appBar: AppBar(title: const Text('Crash Game')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -85,7 +82,7 @@ class _GameCrashPageState extends State<GameCrashPage> {
               'Rocket Value: x${_rocketValue.toStringAsFixed(2)}',
               style: const TextStyle(fontSize: 24),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             TextField(
               controller: _guessController,
               decoration: const InputDecoration(
@@ -105,7 +102,7 @@ class _GameCrashPageState extends State<GameCrashPage> {
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             _gameRunning
                 ? const ElevatedButton(
                     onPressed: null,
@@ -115,35 +112,55 @@ class _GameCrashPageState extends State<GameCrashPage> {
                     onPressed: _startGame,
                     child: const Text('Start Game'),
                   ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             Stack(
               children: [
                 AspectRatio(
-                  aspectRatio: 1.7,
+                  aspectRatio: 1.6,
                   child: LineChart(
                     LineChartData(
                       minX: 0,
-                      maxX: 20,
-                      minY: 1,
-                      maxY: 20,
+                      maxX: _rocketValue + 1,
+                      minY: 0,
+                      maxY: _rocketValue + 1,
                       lineBarsData: [
                         LineChartBarData(
                           spots: _rocketPath,
                           isCurved: true,
-                          // colors: [Colors.green],
+                          color: const Color.fromARGB(255, 0, 255, 191),
                           barWidth: 4,
                           isStrokeCapRound: true,
+                          gradient: const LinearGradient(
+                            colors: [
+                              Color.fromARGB(40, 30, 170, 255),
+                              Color.fromARGB(255, 0, 255, 255),
+                            ],
+                          ),
                           dotData: const FlDotData(show: false),
                           belowBarData: BarAreaData(show: false),
                         ),
                       ],
                       titlesData: const FlTitlesData(
                         leftTitles: AxisTitles(),
+                        topTitles: AxisTitles(),
                         bottomTitles: AxisTitles(),
+                        rightTitles: AxisTitles(
+                          axisNameSize: 1,
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            interval: 1,
+                            reservedSize: 50,
+                          ),
+                        ),
                       ),
                       borderData: FlBorderData(
                         show: true,
-                        border: Border.all(color: Colors.black),
+                        border: const Border(
+                          bottom: BorderSide(color: Colors.black, width: 1),
+                          right: BorderSide(color: Colors.black, width: 1),
+                          left: BorderSide(color: Colors.transparent),
+                          top: BorderSide(color: Colors.transparent),
+                        ),
                       ),
                       gridData: const FlGridData(show: false),
                     ),
@@ -151,14 +168,17 @@ class _GameCrashPageState extends State<GameCrashPage> {
                 ),
                 if (_rocketPath.isNotEmpty)
                   Positioned(
-                    left: (_rocketPath.last.x / 35) *
-                        MediaQuery.of(context).size.width,
-                    top: (1 - _rocketPath.last.y / 15) *
-                        (MediaQuery.of(context).size.height / 2.1),
+                    // left: (_rocketPath.last.x / 35) *
+                    //     MediaQuery.of(context).size.width,
+                    // top: (1 - _rocketPath.last.y / 15) *
+                    //     (MediaQuery.of(context).size.height / 2.1),
+
+                    left: _rocketPath.last.x,
+                    top: _rocketPath.last.y,
                     child: Image.asset(
                       'assets/rocket.png',
-                      width: 5,
-                      height: 5,
+                      width: 50,
+                      height: 50,
                     ),
                   ),
               ],
