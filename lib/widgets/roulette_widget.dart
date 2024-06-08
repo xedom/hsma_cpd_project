@@ -1,5 +1,5 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:hsma_cpd_project/logic/roulette_logic.dart';
 
 class RouletteWidget extends StatefulWidget {
   @override
@@ -8,73 +8,17 @@ class RouletteWidget extends StatefulWidget {
 
 class _RouletteWidgetState extends State<RouletteWidget>
     with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+  late RouletteLogic rouletteLogic;
 
-  var initialVelocity = 1.0 + math.Random().nextDouble() * 2;
-  var acceleration = -1.0 - math.Random().nextDouble();
-  int extractedNumber = 0;
-
-  var rouletteNumbers = [
-    0,
-    26,
-    3,
-    35,
-    12,
-    28,
-    7,
-    29,
-    18,
-    22,
-    9,
-    31,
-    14,
-    20,
-    1,
-    33,
-    16,
-    24,
-    5,
-    10,
-    23,
-    8,
-    30,
-    11,
-    36,
-    13,
-    27,
-    6,
-    34,
-    17,
-    25,
-    2,
-    21,
-    4,
-    19,
-    15,
-    32
-  ];
-
-  // @override
+  @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 0));
-    // ..forward();
-    // ..repeat();
-  }
-
-  void startGame() {
-    initialVelocity = 1.0 + math.Random().nextDouble() * 2;
-    acceleration = -1.0 - math.Random().nextDouble();
-    _controller.reset();
-    _controller.duration =
-        Duration(milliseconds: (1000 * initialVelocity).toInt());
-    _controller.forward(from: 0);
+    rouletteLogic = RouletteLogic(this);
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    rouletteLogic.dispose();
     super.dispose();
   }
 
@@ -88,28 +32,12 @@ class _RouletteWidgetState extends State<RouletteWidget>
             FractionalTranslation(
               translation: const Offset(0, -0.5),
               child: ClipRect(
-                clipper: BottomHalfClipper(),
+                clipper: HalfClipper(),
                 child: AnimatedBuilder(
-                  animation: _controller,
+                  animation: rouletteLogic.animation,
                   child: Image.asset('assets/roulette.png'),
                   builder: (context, child) {
-                    var t =
-                        _controller.value * (-initialVelocity / acceleration);
-                    var angle =
-                        (initialVelocity * t + 0.5 * acceleration * t * t) *
-                            2 *
-                            math.pi;
-                    var finalAngle = -(math.pow(initialVelocity, 2) /
-                            acceleration) +
-                        (1 / 2) * (math.pow(initialVelocity, 2) / acceleration);
-                    var finalAngleInDegree = (finalAngle * 360) % 360;
-                    // var extractedNumber = rouletteNumbers[
-                    //     (finalAngleInDegree / (360 / 37)).round() % 37];
-                    extractedNumber = rouletteNumbers[
-                        (finalAngleInDegree / (360 / 37)).round() % 37];
-                    // print('finalAngle is $finalAngle');
-                    // print('finalAngleInDegree is $finalAngleInDegree');
-                    // print('extractedNumber is $extractedNumber');
+                    var angle = rouletteLogic.calculateCurrentAngle();
                     return Transform.rotate(angle: angle, child: child);
                   },
                 ),
@@ -139,24 +67,31 @@ class _RouletteWidgetState extends State<RouletteWidget>
           ],
         ),
         ElevatedButton(
-          onPressed: startGame,
+          onPressed: rouletteLogic.startGame,
           child: const Text('Start Game'),
         ),
-        Text(
-          'Extracted Number: $extractedNumber',
-          style: const TextStyle(fontSize: 24),
+        AnimatedBuilder(
+          animation: rouletteLogic.animation,
+          builder: (context, child) {
+            return Text(
+              'Extracted Number: ${rouletteLogic.extractedNumber}',
+              style: const TextStyle(fontSize: 24),
+            );
+          },
         ),
       ],
     );
   }
 }
 
-class BottomHalfClipper extends CustomClipper<Rect> {
+class HalfClipper extends CustomClipper<Rect> {
   @override
   Rect getClip(Size size) {
     return Rect.fromLTRB(0, size.height / 2, size.width, size.height);
   }
 
   @override
-  bool shouldReclip(CustomClipper<Rect> oldClipper) => false;
+  bool shouldReclip(CustomClipper<Rect> oldClipper) {
+    return false;
+  }
 }
