@@ -2,6 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:hsma_cpd_project/logic/roulette_logic.dart';
 
 class RouletteWidget extends StatefulWidget {
+  final int randomNumber;
+  final ValueChanged<int> onAnimationEnd;
+
+  const RouletteWidget({
+    required this.randomNumber,
+    required this.onAnimationEnd,
+  });
+
   @override
   _RouletteWidgetState createState() => _RouletteWidgetState();
 }
@@ -23,61 +31,55 @@ class _RouletteWidgetState extends State<RouletteWidget>
   }
 
   @override
+  void didUpdateWidget(covariant RouletteWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.randomNumber != widget.randomNumber) {
+      rouletteLogic.startGameWithRandomNumber(widget.randomNumber);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Column(
+    return Stack(
+      alignment: Alignment.topCenter,
       children: [
-        Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            FractionalTranslation(
-              translation: const Offset(0, -0.5),
-              child: ClipRect(
-                clipper: HalfClipper(),
-                child: AnimatedBuilder(
-                  animation: rouletteLogic.animation,
-                  child: Image.asset('assets/roulette.png'),
-                  builder: (context, child) {
-                    var angle = rouletteLogic.calculateCurrentAngle();
-                    return Transform.rotate(angle: angle, child: child);
-                  },
-                ),
-              ),
+        FractionalTranslation(
+          translation: const Offset(0, -0.5),
+          child: ClipRect(
+            clipper: HalfClipper(),
+            child: AnimatedBuilder(
+              animation: rouletteLogic.animation,
+              child: Image.asset('assets/roulette.png'),
+              builder: (context, child) {
+                var angle = rouletteLogic.calculateCurrentAngle();
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  widget.onAnimationEnd(rouletteLogic.extractedNumber);
+                });
+                return Transform.rotate(angle: angle, child: child);
+              },
             ),
-            Positioned(
-              top: 150,
-              child: Container(
-                width: 20,
-                height: 20,
-                decoration: BoxDecoration(
-                  image: const DecorationImage(
-                    image: AssetImage('assets/roulette_ball.png'),
-                    fit: BoxFit.cover,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 10,
-                      offset: const Offset(0, 0),
-                    ),
-                  ],
-                ),
+          ),
+        ),
+        Positioned(
+          top: 150,
+          child: Container(
+            width: 20,
+            height: 20,
+            decoration: BoxDecoration(
+              image: const DecorationImage(
+                image: AssetImage('assets/roulette_ball.png'),
+                fit: BoxFit.cover,
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.5),
+                  spreadRadius: 1,
+                  blurRadius: 10,
+                  offset: const Offset(0, 0),
+                ),
+              ],
             ),
-          ],
-        ),
-        ElevatedButton(
-          onPressed: rouletteLogic.startGame,
-          child: const Text('Start Game'),
-        ),
-        AnimatedBuilder(
-          animation: rouletteLogic.animation,
-          builder: (context, child) {
-            return Text(
-              'Extracted Number: ${rouletteLogic.extractedNumber}',
-              style: const TextStyle(fontSize: 24),
-            );
-          },
+          ),
         ),
       ],
     );

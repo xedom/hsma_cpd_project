@@ -1,13 +1,12 @@
 import 'dart:math' as math;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class RouletteLogic with ChangeNotifier {
   late AnimationController _controller;
-
   double initialVelocity = 1.0 + math.Random().nextDouble() * 2;
   double acceleration = -1.0 - math.Random().nextDouble();
   int extractedNumber = 0;
-
   final List<int> rouletteNumbers = [
     0,
     26,
@@ -60,29 +59,62 @@ class RouletteLogic with ChangeNotifier {
 
   Animation<double> get animation => _controller;
 
-  void startGame() {
-    initialVelocity = 1.0 + math.Random().nextDouble() * 2;
-    acceleration = -1.0 - math.Random().nextDouble();
+  void startGameWithRandomNumber(int randomNumber) {
     _controller.reset();
+
+    int targetIndex = rouletteNumbers.indexOf(randomNumber);
+    double targetAngle = targetIndex * (2 * math.pi / rouletteNumbers.length);
+    double extraRotations = (1 + math.Random().nextInt(3)) * 2 * math.pi;
+
+    // Set a fixed duration for the animation
     _controller.duration =
         Duration(milliseconds: (1000 * initialVelocity).toInt());
     _controller.forward(from: 0);
+
+    // Set the final target angle including extra rotations
+    _controller.addListener(() {
+      final progress = _controller.value;
+      final currentAngle = (targetAngle + extraRotations) * progress;
+      extractedNumber = rouletteNumbers[((currentAngle % (2 * math.pi)) /
+                  (2 * math.pi / rouletteNumbers.length))
+              .round() %
+          37];
+
+      // var t = _controller.value * (-initialVelocity / acceleration);
+      // var angle =
+      //     (initialVelocity * t + 0.5 * acceleration * t * t) * 2 * math.pi;
+      // var finalAngle = -(math.pow(initialVelocity, 2) / acceleration) +
+      //     (1 / 2) * (math.pow(initialVelocity, 2) / acceleration);
+      // var finalAngleInDegree = (finalAngle * 360) % 360;
+      // // var extractedNumber = rouletteNumbers[
+      // //     (finalAngleInDegree / (360 / 37)).round() % 37];
+      // extractedNumber =
+      //     rouletteNumbers[(finalAngleInDegree / (360 / 37)).round() % 37];
+    });
+
+    // Update the extracted number when the animation is complete
+    _controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        extractedNumber = randomNumber;
+        notifyListeners();
+      }
+    });
   }
 
   double calculateCurrentAngle() {
-    var t = _controller.value * (-initialVelocity / acceleration);
-    var angle =
-        (initialVelocity * t + 0.5 * acceleration * t * t) * 2 * math.pi;
-    return angle;
-  }
+    double progress = _controller.value;
+    int targetIndex = rouletteNumbers.indexOf(extractedNumber);
+    double targetAngle = targetIndex * (2 * math.pi / rouletteNumbers.length);
 
-  int calculateExtractedNumber() {
-    var finalAngle = -(math.pow(initialVelocity, 2) / acceleration) +
-        (1 / 2) * (math.pow(initialVelocity, 2) / acceleration);
-    var finalAngleInDegree = (finalAngle * 360) % 360;
-    extractedNumber =
-        rouletteNumbers[(finalAngleInDegree / (360 / 37)).round() % 37];
-    return extractedNumber;
+    // Add between 1 and 3 full rotations to the target angle
+    double extraRotations = (math.Random().nextInt(3) * 2) * math.pi;
+
+    // var t = _controller.value * (-initialVelocity / acceleration);
+    // var angle = (initialVelocity * t) + 0.5 * (acceleration * math.pow(t, 2)) * 2 * math.pi;
+    // return angle;
+
+    return (targetAngle + extraRotations) * progress;
+    // return 4 * math.pi * progress;
   }
 
   void dispose() {
