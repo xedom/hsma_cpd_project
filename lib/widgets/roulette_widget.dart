@@ -6,6 +6,7 @@ class RouletteWidget extends StatefulWidget {
   final ValueChanged<int> onAnimationEnd;
 
   const RouletteWidget({
+    super.key,
     required this.randomNumber,
     required this.onAnimationEnd,
   });

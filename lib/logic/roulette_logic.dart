@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 
 class RouletteLogic with ChangeNotifier {
   late AnimationController _controller;
-  double initialVelocity = 1.0 + math.Random().nextDouble() * 2;
-  double acceleration = -1.0 - math.Random().nextDouble();
-  int extractedNumber = 0;
+  // double initialVelocity = 1.0 + math.Random().nextDouble() * 2;
+  // double acceleration = -1.0 - math.Random().nextDouble();
+  double initialVelocity = 1.0;
+  double acceleration = -1.0;
+  double extractedNumber = 0;
+  bool completed = false;
   final List<int> rouletteNumbers = [
     0,
     26,
@@ -61,24 +64,23 @@ class RouletteLogic with ChangeNotifier {
 
   void startGameWithRandomNumber(int randomNumber) {
     _controller.reset();
+    completed = false;
 
     int targetIndex = rouletteNumbers.indexOf(randomNumber);
     double targetAngle = targetIndex * (2 * math.pi / rouletteNumbers.length);
     double extraRotations = (1 + math.Random().nextInt(3)) * 2 * math.pi;
 
-    // Set a fixed duration for the animation
     _controller.duration =
         Duration(milliseconds: (1000 * initialVelocity).toInt());
     _controller.forward(from: 0);
 
-    // Set the final target angle including extra rotations
     _controller.addListener(() {
-      final progress = _controller.value;
-      final currentAngle = (targetAngle + extraRotations) * progress;
-      extractedNumber = rouletteNumbers[((currentAngle % (2 * math.pi)) /
-                  (2 * math.pi / rouletteNumbers.length))
-              .round() %
-          37];
+      // final progress = _controller.value;
+      // final currentAngle = (targetAngle + extraRotations) * progress;
+      // extractedNumber = rouletteNumbers[((currentAngle % (2 * math.pi)) /
+      //             (2 * math.pi / rouletteNumbers.length))
+      //         .round() %
+      //     37];
 
       // var t = _controller.value * (-initialVelocity / acceleration);
       // var angle =
@@ -92,10 +94,10 @@ class RouletteLogic with ChangeNotifier {
       //     rouletteNumbers[(finalAngleInDegree / (360 / 37)).round() % 37];
     });
 
-    // Update the extracted number when the animation is complete
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        extractedNumber = randomNumber;
+        // extractedNumber = randomNumber;
+        completed = true;
         notifyListeners();
       }
     });
@@ -103,15 +105,18 @@ class RouletteLogic with ChangeNotifier {
 
   double calculateCurrentAngle() {
     double progress = _controller.value;
-    int targetIndex = rouletteNumbers.indexOf(extractedNumber);
+    int targetIndex =
+        rouletteNumbers.indexOf(extractedNumber.toInt()); // TODO temp fix
     double targetAngle = targetIndex * (2 * math.pi / rouletteNumbers.length);
 
-    // Add between 1 and 3 full rotations to the target angle
-    double extraRotations = (math.Random().nextInt(3) * 2) * math.pi;
+    // double extraRotations = (math.Random().nextInt(3) * 2) * math.pi;
+    double extraRotations = 0;
 
     // var t = _controller.value * (-initialVelocity / acceleration);
     // var angle = (initialVelocity * t) + 0.5 * (acceleration * math.pow(t, 2)) * 2 * math.pi;
     // return angle;
+
+    extractedNumber = (targetAngle + extraRotations) * progress;
 
     return (targetAngle + extraRotations) * progress;
     // return 4 * math.pi * progress;
