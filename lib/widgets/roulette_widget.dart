@@ -54,7 +54,8 @@ class _RouletteWidgetState extends State<RouletteWidget>
               builder: (context, child) {
                 var angle = rouletteLogic.calculateCurrentAngle();
                 WidgetsBinding.instance.addPostFrameCallback((_) {
-                  widget.onAnimationEnd(rouletteLogic.extractedNumber);
+                  widget.onAnimationEnd(
+                      rouletteLogic.extractedNumber.toInt()); // TODO temp fix
                 });
                 return Transform.rotate(angle: angle, child: child);
               },
