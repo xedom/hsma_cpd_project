@@ -72,51 +72,16 @@ class _GameCrashPageState extends State<GameCrashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Crash Game')),
+      // appBar: AppBar(title: const Text('Crash Game')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'Rocket Value: x${_rocketValue.toStringAsFixed(2)}',
-              style: const TextStyle(fontSize: 24),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _guessController,
-              decoration: const InputDecoration(
-                labelText: 'Your Guess (e.g., x1.56)',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _betController,
-              decoration: const InputDecoration(
-                labelText: 'Bet Amount',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-            ),
-            const SizedBox(height: 10),
-            _gameRunning
-                ? const ElevatedButton(
-                    onPressed: null,
-                    child: Text('Game Running...'),
-                  )
-                : ElevatedButton(
-                    onPressed: _startGame,
-                    child: const Text('Start Game'),
-                  ),
-            const SizedBox(height: 10),
             Stack(
               children: [
                 AspectRatio(
-                  aspectRatio: 1.6,
+                  aspectRatio: 1.8,
                   child: LineChart(
                     LineChartData(
                       minX: 0,
@@ -188,6 +153,41 @@ class _GameCrashPageState extends State<GameCrashPage> {
               _message,
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
+            const SizedBox(height: 10),
+            Text(
+              'Rocket Value: x${_rocketValue.toStringAsFixed(2)}',
+              style: const TextStyle(fontSize: 24),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: _guessController,
+              decoration: const InputDecoration(
+                labelText: 'Your Guess (e.g., x1.56)',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: _betController,
+              decoration: const InputDecoration(
+                labelText: 'Bet Amount',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+            ),
+            const SizedBox(height: 10),
+            _gameRunning
+                ? const ElevatedButton(
+                    onPressed: null,
+                    child: Text('Game Running...'),
+                  )
+                : ElevatedButton(
+                    onPressed: _startGame,
+                    child: const Text('Start Game'),
+                  ),
           ],
         ),
       ),

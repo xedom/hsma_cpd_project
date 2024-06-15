@@ -59,6 +59,59 @@ flutter:
     - assets/roulette_ball.png
     - assets/heads.png
     - assets/tails.png
+    - assets/cards/clubs_1.png
+    - assets/cards/clubs_10.png
+    - assets/cards/clubs_11.png
+    - assets/cards/clubs_12.png
+    - assets/cards/clubs_13.png
+    - assets/cards/clubs_2.png
+    - assets/cards/clubs_3.png
+    - assets/cards/clubs_4.png
+    - assets/cards/clubs_5.png
+    - assets/cards/clubs_6.png
+    - assets/cards/clubs_7.png
+    - assets/cards/clubs_8.png
+    - assets/cards/clubs_9.png
+    - assets/cards/diamonds_1.png
+    - assets/cards/diamonds_10.png
+    - assets/cards/diamonds_11.png
+    - assets/cards/diamonds_12.png
+    - assets/cards/diamonds_13.png
+    - assets/cards/diamonds_2.png
+    - assets/cards/diamonds_3.png
+    - assets/cards/diamonds_4.png
+    - assets/cards/diamonds_5.png
+    - assets/cards/diamonds_6.png
+    - assets/cards/diamonds_7.png
+    - assets/cards/diamonds_8.png
+    - assets/cards/diamonds_9.png
+    - assets/cards/hearts_1.png
+    - assets/cards/hearts_10.png
+    - assets/cards/hearts_11.png
+    - assets/cards/hearts_12.png
+    - assets/cards/hearts_13.png
+    - assets/cards/hearts_2.png
+    - assets/cards/hearts_3.png
+    - assets/cards/hearts_4.png
+    - assets/cards/hearts_5.png
+    - assets/cards/hearts_6.png
+    - assets/cards/hearts_7.png
+    - assets/cards/hearts_8.png
+    - assets/cards/hearts_9.png
+    - assets/cards/joker.png
+    - assets/cards/spades_1.png
+    - assets/cards/spades_10.png
+    - assets/cards/spades_11.png
+    - assets/cards/spades_12.png
+    - assets/cards/spades_13.png
+    - assets/cards/spades_2.png
+    - assets/cards/spades_3.png
+    - assets/cards/spades_4.png
+    - assets/cards/spades_5.png
+    - assets/cards/spades_6.png
+    - assets/cards/spades_7.png
+    - assets/cards/spades_8.png
+    - assets/cards/spades_9.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
