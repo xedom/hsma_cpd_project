@@ -65,9 +65,9 @@ class RouletteLogic with ChangeNotifier {
     _controller.reset();
     completed = false;
 
-    int targetIndex = rouletteNumbers.indexOf(randomNumber);
-    double targetAngle = targetIndex * (2 * math.pi / rouletteNumbers.length);
-    double extraRotations = (1 + math.Random().nextInt(3)) * 2 * math.pi;
+    // int targetIndex = rouletteNumbers.indexOf(randomNumber);
+    // double targetAngle = targetIndex * (2 * math.pi / rouletteNumbers.length);
+    // double extraRotations = (1 + math.Random().nextInt(3)) * 2 * math.pi;
 
     _controller.duration =
         Duration(milliseconds: (1000 * initialVelocity).toInt());
@@ -123,6 +123,7 @@ class RouletteLogic with ChangeNotifier {
 
   @override
   void dispose() {
+    super.dispose();
     _controller.dispose();
   }
 }

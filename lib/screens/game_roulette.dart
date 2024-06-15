@@ -6,10 +6,10 @@ class GameRoulettePage extends StatefulWidget {
   const GameRoulettePage({super.key});
 
   @override
-  _GameRoulettePageState createState() => _GameRoulettePageState();
+  GameRoulettePageState createState() => GameRoulettePageState();
 }
 
-class _GameRoulettePageState extends State<GameRoulettePage> {
+class GameRoulettePageState extends State<GameRoulettePage> {
   final math.Random random = math.Random();
   int randomNumber = 0;
   int extractedNumber = 0;

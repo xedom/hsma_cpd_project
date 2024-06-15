@@ -5,10 +5,10 @@ class GameCoinFlipPage extends StatefulWidget {
   const GameCoinFlipPage({super.key});
 
   @override
-  _GameCoinFlipPageState createState() => _GameCoinFlipPageState();
+  GameCoinFlipPageState createState() => GameCoinFlipPageState();
 }
 
-class _GameCoinFlipPageState extends State<GameCoinFlipPage>
+class GameCoinFlipPageState extends State<GameCoinFlipPage>
     with SingleTickerProviderStateMixin {
   final TextEditingController _betController = TextEditingController();
   String _userGuess = '';

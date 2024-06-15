@@ -8,10 +8,10 @@ class BottomNavBarShell extends StatefulWidget {
   const BottomNavBarShell({super.key, required this.child});
 
   @override
-  _BottomNavBarShellState createState() => _BottomNavBarShellState();
+  BottomNavBarShellState createState() => BottomNavBarShellState();
 }
 
-class _BottomNavBarShellState extends State<BottomNavBarShell> {
+class BottomNavBarShellState extends State<BottomNavBarShell> {
   static List<Map<String, String>> pages = [
     {'name': 'Home', 'path': '/home'},
     {'name': 'Roulette', 'path': '/roulette'},
@@ -23,7 +23,7 @@ class _BottomNavBarShellState extends State<BottomNavBarShell> {
   ];
 
   int _selectedIndex = 0;
-  final String _title = pages[0]['name']!;
+  // final String _title = pages[0]['name']!;
 
   void _onItemTapped(int index) {
     setState(() {

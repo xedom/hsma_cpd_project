@@ -8,10 +8,10 @@ class GameCrashPage extends StatefulWidget {
   const GameCrashPage({super.key});
 
   @override
-  _GameCrashPageState createState() => _GameCrashPageState();
+  GameCrashPageState createState() => GameCrashPageState();
 }
 
-class _GameCrashPageState extends State<GameCrashPage> {
+class GameCrashPageState extends State<GameCrashPage> {
   final TextEditingController _guessController = TextEditingController();
   final TextEditingController _betController = TextEditingController();
   double _rocketValue = 0;

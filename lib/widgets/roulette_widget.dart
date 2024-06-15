@@ -12,10 +12,10 @@ class RouletteWidget extends StatefulWidget {
   });
 
   @override
-  _RouletteWidgetState createState() => _RouletteWidgetState();
+  RouletteWidgetState createState() => RouletteWidgetState();
 }
 
-class _RouletteWidgetState extends State<RouletteWidget>
+class RouletteWidgetState extends State<RouletteWidget>
     with SingleTickerProviderStateMixin {
   late RouletteLogic rouletteLogic;
 

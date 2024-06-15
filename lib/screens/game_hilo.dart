@@ -5,10 +5,10 @@ class GameHiLoPage extends StatefulWidget {
   const GameHiLoPage({super.key});
 
   @override
-  _GameHiLoPageState createState() => _GameHiLoPageState();
+  GameHiLoPageState createState() => GameHiLoPageState();
 }
 
-class _GameHiLoPageState extends State<GameHiLoPage> {
+class GameHiLoPageState extends State<GameHiLoPage> {
   final HiLoLogic _logic = HiLoLogic();
   final TextEditingController _betController = TextEditingController();
 
