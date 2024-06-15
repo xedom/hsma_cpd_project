@@ -1,5 +1,4 @@
 import 'dart:math' as math;
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class RouletteLogic with ChangeNotifier {
@@ -122,6 +121,7 @@ class RouletteLogic with ChangeNotifier {
     // return 4 * math.pi * progress;
   }
 
+  @override
   void dispose() {
     _controller.dispose();
   }

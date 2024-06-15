@@ -30,12 +30,12 @@ final router = GoRouter(
         GoRoute(
           name: 'roulette',
           path: '/roulette',
-          builder: (context, state) => GameRoulettePage(),
+          builder: (context, state) => const GameRoulettePage(),
         ),
         GoRoute(
           name: 'coin-flip',
           path: '/coin-flip',
-          builder: (context, state) => GameCoinFlipPage(),
+          builder: (context, state) => const GameCoinFlipPage(),
         ),
         GoRoute(
           name: 'crash',
@@ -45,12 +45,12 @@ final router = GoRouter(
         GoRoute(
           name: 'hi-lo',
           path: '/hi-lo',
-          builder: (context, state) => GameHiLoPage(),
+          builder: (context, state) => const GameHiLoPage(),
         ),
         GoRoute(
           name: 'profile',
           path: '/profile',
-          builder: (context, state) => ProfilePage(),
+          builder: (context, state) => const ProfilePage(),
         ),
         GoRoute(
           name: 'login',

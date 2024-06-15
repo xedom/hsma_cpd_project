@@ -17,7 +17,7 @@ class ProfilePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AvatarWithFallback(
+            const AvatarWithFallback(
               imageUrl: 'https://xed.im/img/pingu.jpg',
               radius: 50,
             ),

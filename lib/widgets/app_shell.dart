@@ -23,7 +23,7 @@ class _BottomNavBarShellState extends State<BottomNavBarShell> {
   ];
 
   int _selectedIndex = 0;
-  String _title = pages[0]['name']!;
+  final String _title = pages[0]['name']!;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -38,8 +38,8 @@ class _BottomNavBarShellState extends State<BottomNavBarShell> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        leading: Padding(
-            padding: const EdgeInsets.all(8.0),
+        leading: const Padding(
+            padding: EdgeInsets.all(8.0),
             child: AvatarWithFallback(
               imageUrl: 'https://xed.im/img/pingu.jpg',
               radius: 30,
