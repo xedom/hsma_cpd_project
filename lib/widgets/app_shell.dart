@@ -51,16 +51,19 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: GestureDetector(
-              onTap: () => GoRouter.of(context).go('/coins'),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-                child: Row(
-                  children: [
-                    Text('100', style: TextStyle(color: Colors.white)),
-                    SizedBox(width: 5),
-                    Icon(Icons.paid, color: Colors.white),
-                  ],
+            child: MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                onTap: () => GoRouter.of(context).go('/coins'),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+                  child: Row(
+                    children: [
+                      Text('100', style: TextStyle(color: Colors.white)),
+                      SizedBox(width: 5),
+                      Icon(Icons.paid, color: Colors.white),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -70,41 +73,40 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
       body: widget.child,
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.games),
-            label: 'Roulette',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Coin Flip',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.rocket_launch),
-            label: 'Crash',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.card_membership),
-            label: 'Hi-Lo',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label: 'Profile',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.login),
-            label: 'Login',
-          ),
-        ],
+        items: pages
+            .map(
+              (page) => BottomNavigationBarItem(
+                icon: getIconForPage(page['name']!),
+                label: page['name'],
+              ),
+            )
+            .toList(),
         currentIndex: _selectedIndex,
         selectedItemColor: AppColors.primary,
         unselectedItemColor: AppColors.gray,
         onTap: _onItemTapped,
       ),
     );
+  }
+
+  Icon getIconForPage(String pageName) {
+    switch (pageName) {
+      case 'Home':
+        return const Icon(Icons.home);
+      case 'Roulette':
+        return const Icon(Icons.games);
+      case 'Coin Flip':
+        return const Icon(Icons.casino);
+      case 'Crash':
+        return const Icon(Icons.rocket_launch);
+      case 'Hi-Lo':
+        return const Icon(Icons.card_membership);
+      case 'Profile':
+        return const Icon(Icons.account_circle);
+      case 'Login':
+        return const Icon(Icons.login);
+      default:
+        return const Icon(Icons.help);
+    }
   }
 }
