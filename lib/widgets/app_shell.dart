@@ -102,7 +102,7 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: AppColors.primary,
-        unselectedItemColor: AppColors.primary.withOpacity(0.5),
+        unselectedItemColor: AppColors.gray,
         onTap: _onItemTapped,
       ),
     );
