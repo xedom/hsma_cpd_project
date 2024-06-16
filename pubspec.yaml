@@ -54,11 +54,13 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/google_logo.png
     - assets/rocket.png
     - assets/roulette.png
     - assets/roulette_ball.png
     - assets/heads.png
     - assets/tails.png
+    - assets/cards/back.webp
     - assets/cards/clubs_1.png
     - assets/cards/clubs_10.png
     - assets/cards/clubs_11.png

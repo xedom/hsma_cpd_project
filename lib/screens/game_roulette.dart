@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:hsma_cpd_project/widgets/roulette_widget.dart';
+import 'package:hsma_cpd_project/widgets/button_custom.dart';
 
 class GameRoulettePage extends StatefulWidget {
   const GameRoulettePage({super.key});
@@ -29,22 +30,43 @@ class GameRoulettePageState extends State<GameRoulettePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Container(
-            alignment: Alignment.topCenter,
-            child: RouletteWidget(
-              randomNumber: randomNumber,
-              onAnimationEnd: _onNumberExtracted,
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)],
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              alignment: Alignment.topCenter,
+              child: RouletteWidget(
+                randomNumber: randomNumber,
+                onAnimationEnd: _onNumberExtracted,
+              ),
             ),
-          ),
-          ElevatedButton(
-            onPressed: _startGame,
-            child: const Text('Start Game'),
-          ),
-          Text('Random Number: $randomNumber'),
-          Text('Extracted Number: $extractedNumber'),
-        ],
+            const SizedBox(height: 20),
+            CustomButton(
+              label: 'Start Game',
+              onPressed: _startGame,
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Random Number: $randomNumber',
+              style: const TextStyle(color: Colors.white, fontSize: 18),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'Extracted Number: $extractedNumber',
+              style: const TextStyle(color: Colors.white, fontSize: 18),
+            ),
+          ],
+        ),
       ),
     );
   }

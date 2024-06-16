@@ -93,85 +93,110 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // if (_coinResult.isNotEmpty)
-            Column(
-              children: [
-                _buildCoinImage(),
-                const SizedBox(height: 20),
-                Text(
-                  _message,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+      appBar: AppBar(
+        title: const Text('Coin Flip Game'),
+        backgroundColor: Colors.teal,
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildCoinImage(),
+              const SizedBox(height: 20),
+              Text(
+                _message,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.teal,
                 ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'Make a guess: Heads or Tails',
-              style: TextStyle(fontSize: 24),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _userGuess = 'Heads';
-                    });
-                  },
-                  child: Image.asset(
-                    'assets/heads.png',
-                    height: 100,
-                    width: 100,
-                    color: _userGuess == 'Heads'
-                        ? Colors.blue.withOpacity(0.5)
-                        : null,
-                    colorBlendMode: BlendMode.color,
-                  ),
-                ),
-                const SizedBox(width: 20),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _userGuess = 'Tails';
-                    });
-                  },
-                  child: Image.asset(
-                    'assets/tails.png',
-                    height: 100,
-                    width: 100,
-                    color: _userGuess == 'Tails'
-                        ? Colors.blue.withOpacity(0.5)
-                        : null,
-                    colorBlendMode: BlendMode.color,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: _betController,
-              decoration: const InputDecoration(
-                labelText: 'Bet Amount',
-                border: OutlineInputBorder(),
               ),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _flipCoin,
-              child: const Text('Flip Coin'),
-            ),
-          ],
+              const SizedBox(height: 20),
+              const Text(
+                'Make a guess: Heads or Tails',
+                style: TextStyle(fontSize: 24, color: Colors.teal),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _userGuess = 'Heads';
+                      });
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: _userGuess == 'Heads'
+                              ? Colors.teal
+                              : Colors.transparent,
+                          width: 3,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Image.asset(
+                        'assets/heads.png',
+                        height: 100,
+                        width: 100,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _userGuess = 'Tails';
+                      });
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: _userGuess == 'Tails'
+                              ? Colors.teal
+                              : Colors.transparent,
+                          width: 3,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Image.asset(
+                        'assets/tails.png',
+                        height: 100,
+                        width: 100,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              TextField(
+                controller: _betController,
+                decoration: const InputDecoration(
+                  labelText: 'Bet Amount',
+                  border: OutlineInputBorder(),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.teal),
+                  ),
+                ),
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _flipCoin,
+                style: ElevatedButton.styleFrom(
+                  // primary: Colors.teal,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 40, vertical: 15),
+                  textStyle: const TextStyle(fontSize: 18),
+                ),
+                child: const Text('Flip Coin'),
+              ),
+            ],
+          ),
         ),
       ),
     );
