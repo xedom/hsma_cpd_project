@@ -13,14 +13,14 @@ class BottomNavBarShell extends StatefulWidget {
 }
 
 class BottomNavBarShellState extends State<BottomNavBarShell> {
-  static List<Map<String, String>> pages = [
-    {'name': 'Home', 'path': '/home'},
-    {'name': 'Roulette', 'path': '/roulette'},
-    {'name': 'Coin Flip', 'path': '/coin-flip'},
-    {'name': 'Crash', 'path': '/crash'},
-    {'name': 'Hi-Lo', 'path': '/hi-lo'},
-    {'name': 'Profile', 'path': '/profile'},
-    {'name': 'Login', 'path': '/login'},
+  static List<Map<String, dynamic>> pages = [
+    {'name': 'Home', 'path': '/home', 'icon': Icons.home},
+    {'name': 'Roulette', 'path': '/roulette', 'icon': Icons.games},
+    {'name': 'Coin Flip', 'path': '/coin-flip', 'icon': Icons.casino},
+    {'name': 'Crash', 'path': '/crash', 'icon': Icons.rocket_launch},
+    {'name': 'Hi-Lo', 'path': '/hi-lo', 'icon': Icons.card_membership},
+    {'name': 'Profile', 'path': '/profile', 'icon': Icons.account_circle},
+    {'name': 'Login', 'path': '/login', 'icon': Icons.login},
   ];
 
   int _selectedIndex = 0;
@@ -55,9 +55,13 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
                 onTap: () => GoRouter.of(context).go('/coins'),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-                  child: Row(
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.transparent,
+                  ),
+                  child: const Row(
                     children: [
                       Text('100', style: TextStyle(color: Colors.white)),
                       SizedBox(width: 5),
@@ -76,7 +80,7 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
         items: pages
             .map(
               (page) => BottomNavigationBarItem(
-                icon: getIconForPage(page['name']!),
+                icon: Icon(page['icon'], size: 20),
                 label: page['name'],
               ),
             )
@@ -87,26 +91,5 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
         onTap: _onItemTapped,
       ),
     );
-  }
-
-  Icon getIconForPage(String pageName) {
-    switch (pageName) {
-      case 'Home':
-        return const Icon(Icons.home);
-      case 'Roulette':
-        return const Icon(Icons.games);
-      case 'Coin Flip':
-        return const Icon(Icons.casino);
-      case 'Crash':
-        return const Icon(Icons.rocket_launch);
-      case 'Hi-Lo':
-        return const Icon(Icons.card_membership);
-      case 'Profile':
-        return const Icon(Icons.account_circle);
-      case 'Login':
-        return const Icon(Icons.login);
-      default:
-        return const Icon(Icons.help);
-    }
   }
 }
