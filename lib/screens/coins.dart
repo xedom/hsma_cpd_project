@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hsma_cpd_project/widgets/coin_packet.dart';
 
 class CoinsPage extends StatelessWidget {
   CoinsPage({super.key});
@@ -19,7 +18,6 @@ class CoinsPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 10),
             const Text(
               'Coins Packets',
               style: TextStyle(
@@ -28,46 +26,60 @@ class CoinsPage extends StatelessWidget {
                 color: Colors.teal,
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: ListView.builder(
                   itemCount: coinPackets.length,
                   itemBuilder: (context, index) {
-                    return Card(
-                      elevation: 5,
+                    return Container(
                       margin: const EdgeInsets.symmetric(vertical: 10),
-                      shape: RoundedRectangleBorder(
+                      padding: const EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: Colors.teal.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.all(16.0),
-                        leading: const Icon(Icons.monetization_on,
-                            size: 40, color: Colors.teal),
-                        title: Text(
-                          coinPackets[index]['name'] as String,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.teal[700],
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.monetization_on,
+                            size: 40,
+                            color: Colors.teal,
                           ),
-                        ),
-                        subtitle: Text(
-                          '${coinPackets[index]['amount']} coins',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.teal[500],
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  coinPackets[index]['name'] as String,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.teal[700],
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  '${coinPackets[index]['amount']} coins',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.teal[500],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        trailing: Text(
-                          '\$${(coinPackets[index]['price'] as double).toStringAsFixed(2)}',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                          Text(
+                            '\$${(coinPackets[index]['price'] as double).toStringAsFixed(2)}',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     );
                   },
