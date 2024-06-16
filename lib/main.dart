@@ -9,6 +9,7 @@ import 'package:hsma_cpd_project/screens/home.dart';
 import 'package:hsma_cpd_project/screens/login.dart';
 import 'package:hsma_cpd_project/screens/profile.dart';
 import 'package:hsma_cpd_project/widgets/app_shell.dart';
+import 'package:hsma_cpd_project/constants.dart';
 
 void main() {
   runApp(const MyApp());
@@ -60,47 +61,36 @@ final router = GoRouter(
         GoRoute(
           name: 'coins',
           path: '/coins',
-          builder: (context, state) => CoinsPage(),
+          builder: (context, state) => const CoinsPage(),
         )
-
-        // GoRoute(
-        //   path: '/fruits/:id',
-        //   builder: (context, state) {
-        //     final id = state.pathParameters["id"]! // Get "id" param from URL
-        //     return HomePage(id: id);
-        //   },
-        // ),
       ],
     ),
   ],
 );
-
-// path: '/',
-// // pageBuilder: (context, state) { return const HomePage(); },
-// builder: (context, state) {return Scaffold(appBar: AppBar(title: const Text('Home')),);
-// },
-// routes: [
-//   GoRoute(
-//     path: '/login',
-//     builder: (context, state) {return Scaffold(appBar: AppBar(title: const Text('Login')));},
-//   ),
-// ],
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: router,
-      title: 'CPD App',
-      theme: ThemeData(
-        primaryColor: Colors.blue,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)],
+        ),
       ),
-      debugShowCheckedModeBanner: false,
+      child: MaterialApp.router(
+        routerConfig: router,
+        title: 'CPD App',
+        theme: ThemeData(
+          primaryColor: AppColors.primary,
+          colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
+          useMaterial3: true,
+        ),
+        debugShowCheckedModeBanner: false,
+      ),
     );
   }
 }

@@ -3,6 +3,9 @@ import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:hsma_cpd_project/widgets/button_custom.dart';
+import 'package:hsma_cpd_project/widgets/field_input.dart';
+import 'package:hsma_cpd_project/constants.dart';
 
 class GameCrashPage extends StatefulWidget {
   const GameCrashPage({super.key});
@@ -72,123 +75,121 @@ class GameCrashPageState extends State<GameCrashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(title: const Text('Crash Game')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Stack(
-              children: [
-                AspectRatio(
-                  aspectRatio: 1.8,
-                  child: LineChart(
-                    LineChartData(
-                      minX: 0,
-                      maxX: _rocketValue + 1,
-                      minY: 0,
-                      maxY: _rocketValue + 1,
-                      lineBarsData: [
-                        LineChartBarData(
-                          spots: _rocketPath,
-                          isCurved: true,
-                          color: const Color.fromARGB(255, 0, 255, 191),
-                          barWidth: 4,
-                          isStrokeCapRound: true,
-                          gradient: const LinearGradient(
-                            colors: [
-                              Color.fromARGB(40, 30, 170, 255),
-                              Color.fromARGB(255, 0, 255, 255),
-                            ],
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)],
+          ),
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Stack(
+                children: [
+                  AspectRatio(
+                    aspectRatio: 1.8,
+                    child: LineChart(
+                      LineChartData(
+                        minX: 0,
+                        maxX: _rocketValue + 1,
+                        minY: 0,
+                        maxY: _rocketValue + 1,
+                        lineBarsData: [
+                          LineChartBarData(
+                            spots: _rocketPath,
+                            isCurved: true,
+                            gradient: const LinearGradient(
+                              colors: [
+                                Color.fromARGB(40, 30, 170, 255),
+                                Color.fromARGB(255, 0, 255, 255),
+                              ],
+                            ),
+                            barWidth: 4,
+                            isStrokeCapRound: true,
+                            dotData: const FlDotData(show: false),
+                            belowBarData: BarAreaData(show: false),
                           ),
-                          dotData: const FlDotData(show: false),
-                          belowBarData: BarAreaData(show: false),
-                        ),
-                      ],
-                      titlesData: const FlTitlesData(
-                        leftTitles: AxisTitles(),
-                        topTitles: AxisTitles(),
-                        bottomTitles: AxisTitles(),
-                        rightTitles: AxisTitles(
-                          axisNameSize: 1,
-                          sideTitles: SideTitles(
-                            showTitles: true,
-                            interval: 1,
-                            reservedSize: 50,
+                        ],
+                        titlesData: const FlTitlesData(
+                          leftTitles: AxisTitles(),
+                          topTitles: AxisTitles(),
+                          bottomTitles: AxisTitles(),
+                          rightTitles: AxisTitles(
+                            axisNameSize: 1,
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              interval: 1,
+                              reservedSize: 50,
+                            ),
                           ),
                         ),
-                      ),
-                      borderData: FlBorderData(
-                        show: true,
-                        border: const Border(
-                          bottom: BorderSide(color: Colors.black, width: 1),
-                          right: BorderSide(color: Colors.black, width: 1),
-                          left: BorderSide(color: Colors.transparent),
-                          top: BorderSide(color: Colors.transparent),
+                        borderData: FlBorderData(
+                          show: true,
+                          border: const Border(
+                            bottom: BorderSide(color: Colors.black, width: 1),
+                            right: BorderSide(color: Colors.black, width: 1),
+                            left: BorderSide(color: Colors.transparent),
+                            top: BorderSide(color: Colors.transparent),
+                          ),
                         ),
+                        gridData: const FlGridData(show: false),
                       ),
-                      gridData: const FlGridData(show: false),
                     ),
                   ),
-                ),
-                if (_rocketPath.isNotEmpty)
-                  Positioned(
-                    // left: (_rocketPath.last.x / 35) *
-                    //     MediaQuery.of(context).size.width,
-                    // top: (1 - _rocketPath.last.y / 15) *
-                    //     (MediaQuery.of(context).size.height / 2.1),
-
-                    left: _rocketPath.last.x,
-                    top: _rocketPath.last.y,
-                    child: Image.asset(
-                      'assets/rocket.png',
-                      width: 50,
-                      height: 50,
+                  if (_rocketPath.isNotEmpty)
+                    Positioned(
+                      left: _rocketPath.last.x * 20, // Adjust position scaling
+                      top: 300 - (_rocketPath.last.y * 10), // Adjust position scaling
+                      child: Image.asset(
+                        'assets/rocket.png',
+                        width: 50,
+                        height: 50,
+                      ),
                     ),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Text(
-              _message,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              'Rocket Value: x${_rocketValue.toStringAsFixed(2)}',
-              style: const TextStyle(fontSize: 24),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _guessController,
-              decoration: const InputDecoration(
-                labelText: 'Your Guess (e.g., x1.56)',
-                border: OutlineInputBorder(),
+                ],
               ),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _betController,
-              decoration: const InputDecoration(
-                labelText: 'Bet Amount',
-                border: OutlineInputBorder(),
+              const SizedBox(height: 20),
+              Text(
+                _message,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
               ),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-            ),
-            const SizedBox(height: 10),
-            _gameRunning
-                ? const ElevatedButton(
-                    onPressed: null,
-                    child: Text('Game Running...'),
-                  )
-                : ElevatedButton(
-                    onPressed: _startGame,
-                    child: const Text('Start Game'),
-                  ),
-          ],
+              const SizedBox(height: 10),
+              Text(
+                'Rocket Value: x${_rocketValue.toStringAsFixed(2)}',
+                style: const TextStyle(fontSize: 24, color: Colors.white),
+              ),
+              const SizedBox(height: 20),
+              FieldInput(
+                hint: 'Your Guess (e.g., x1.56)',
+                controller: _guessController,
+                icon: Icons.rocket_launch,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              ),
+              const SizedBox(height: 10),
+              FieldInput(
+                hint: 'Bet Amount',
+                controller: _betController,
+                icon: Icons.attach_money,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              ),
+              const SizedBox(height: 20),
+              _gameRunning
+                  ? CustomButton(
+                      label: 'Game Running...',
+                      onPressed: () {},
+                    )
+                  : CustomButton(
+                      label: 'Start Game',
+                      onPressed: _startGame,
+                    ),
+            ],
+          ),
         ),
       ),
     );

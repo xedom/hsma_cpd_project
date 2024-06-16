@@ -1,5 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:hsma_cpd_project/widgets/button_custom.dart';
+import 'package:hsma_cpd_project/widgets/field_input.dart';
 
 class GameCoinFlipPage extends StatefulWidget {
   const GameCoinFlipPage({super.key});
@@ -93,16 +95,22 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Coin Flip Game'),
-        backgroundColor: Colors.teal,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)],
+          ),
+        ),
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const SizedBox(height: 40),
               _buildCoinImage(),
               const SizedBox(height: 20),
               Text(
@@ -110,13 +118,13 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.teal,
+                  color: Colors.white70,
                 ),
               ),
               const SizedBox(height: 20),
               const Text(
                 'Make a guess: Heads or Tails',
-                style: TextStyle(fontSize: 24, color: Colors.teal),
+                style: TextStyle(fontSize: 24, color: Colors.white),
               ),
               const SizedBox(height: 20),
               Row(
@@ -172,28 +180,16 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
                 ],
               ),
               const SizedBox(height: 20),
-              TextField(
+              FieldInput(
+                hint: 'Bet Amount',
                 controller: _betController,
-                decoration: const InputDecoration(
-                  labelText: 'Bet Amount',
-                  border: OutlineInputBorder(),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.teal),
-                  ),
-                ),
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                icon: Icons.attach_money,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
+              CustomButton(
+                label: 'Flip Coin',
                 onPressed: _flipCoin,
-                style: ElevatedButton.styleFrom(
-                  // primary: Colors.teal,
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 40, vertical: 15),
-                  textStyle: const TextStyle(fontSize: 18),
-                ),
-                child: const Text('Flip Coin'),
               ),
             ],
           ),

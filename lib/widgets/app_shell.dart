@@ -38,6 +38,7 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
+        elevation: 0,
         leading: const Padding(
           padding: EdgeInsets.all(8.0),
           child: AvatarWithFallback(
@@ -45,9 +46,7 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
             radius: 30,
           ),
         ),
-        title: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-        ),
+        title: const SizedBox.shrink(),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -56,10 +55,10 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
               child: GestureDetector(
                 onTap: () => GoRouter.of(context).go('/coins'),
                 child: Container(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(25),
+                    color: Colors.white.withOpacity(0.2),
                   ),
                   child: const Row(
                     children: [
@@ -75,20 +74,44 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
         ],
       ),
       body: widget.child,
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: pages
-            .map(
-              (page) => BottomNavigationBarItem(
-                icon: Icon(page['icon'], size: 20),
-                label: page['name'],
-              ),
-            )
-            .toList(),
-        currentIndex: _selectedIndex,
-        selectedItemColor: AppColors.primary,
-        unselectedItemColor: AppColors.gray,
-        onTap: _onItemTapped,
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              spreadRadius: 5,
+              blurRadius: 10,
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+          child: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            items: pages
+                .map(
+                  (page) => BottomNavigationBarItem(
+                    icon: Icon(page['icon'], size: 24),
+                    label: page['name'],
+                  ),
+                )
+                .toList(),
+            currentIndex: _selectedIndex,
+            selectedItemColor: AppColors.primary,
+            unselectedItemColor: AppColors.gray,
+            backgroundColor: Colors.transparent,
+            onTap: _onItemTapped,
+            elevation: 0,
+          ),
+        ),
       ),
     );
   }
