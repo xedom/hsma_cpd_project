@@ -15,25 +15,60 @@ class CoinsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Coins'),
-      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('Coins Packets'),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
+            const Text(
+              'Coins Packets',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.teal,
+              ),
+            ),
+            const SizedBox(height: 10),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: ListView.builder(
                   itemCount: coinPackets.length,
                   itemBuilder: (context, index) {
-                    return CoinPacketCard(
-                      amount: coinPackets[index]['amount'] as int,
-                      price: coinPackets[index]['price'] as double,
-                      name: coinPackets[index]['name'] as String,
+                    return Card(
+                      elevation: 5,
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.all(16.0),
+                        leading: const Icon(Icons.monetization_on,
+                            size: 40, color: Colors.teal),
+                        title: Text(
+                          coinPackets[index]['name'] as String,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.teal[700],
+                          ),
+                        ),
+                        subtitle: Text(
+                          '${coinPackets[index]['amount']} coins',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.teal[500],
+                          ),
+                        ),
+                        trailing: Text(
+                          '\$${(coinPackets[index]['price'] as double).toStringAsFixed(2)}',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
                     );
                   },
                 ),
