@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:hsma_cpd_project/widgets/avatar.dart';
+import 'package:hsma_cpd_project/providers/auth.dart';
 import '../constants.dart';
 
 class BottomNavBarShell extends StatefulWidget {
@@ -13,17 +15,8 @@ class BottomNavBarShell extends StatefulWidget {
 }
 
 class BottomNavBarShellState extends State<BottomNavBarShell> {
-  static List<Map<String, dynamic>> pages = [
-    {'name': 'Home', 'path': '/home', 'icon': Icons.home},
-    {'name': 'Roulette', 'path': '/roulette', 'icon': Icons.games},
-    {'name': 'Coin Flip', 'path': '/coin-flip', 'icon': Icons.casino},
-    {'name': 'Crash', 'path': '/crash', 'icon': Icons.rocket_launch},
-    {'name': 'Hi-Lo', 'path': '/hi-lo', 'icon': Icons.card_membership},
-    {'name': 'Profile', 'path': '/profile', 'icon': Icons.account_circle},
-    {'name': 'Login', 'path': '/login', 'icon': Icons.login},
-  ];
-
   int _selectedIndex = 0;
+  List<Map<String, dynamic>> pages = [];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -35,6 +28,23 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+
+    pages = [
+      {'name': 'Home', 'path': '/home', 'icon': Icons.home},
+      {'name': 'Roulette', 'path': '/roulette', 'icon': Icons.games},
+      {'name': 'Coin Flip', 'path': '/coin-flip', 'icon': Icons.casino},
+      {'name': 'Crash', 'path': '/crash', 'icon': Icons.rocket_launch},
+      {'name': 'Hi-Lo', 'path': '/hi-lo', 'icon': Icons.card_membership},
+      if (authProvider.isLoggedIn)
+        {'name': 'Profile', 'path': '/profile', 'icon': Icons.account_circle},
+      {
+        'name': authProvider.isLoggedIn ? 'Logout' : 'Login',
+        'path': authProvider.isLoggedIn ? '/logout' : '/login',
+        'icon': authProvider.isLoggedIn ? Icons.logout : Icons.login
+      },
+    ];
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
@@ -76,7 +86,7 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
       body: widget.child,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.primary,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
@@ -96,6 +106,7 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
           ),
           child: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
+            backgroundColor: AppColors.primary,
             items: pages
                 .map(
                   (page) => BottomNavigationBarItem(
@@ -105,10 +116,18 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
                 )
                 .toList(),
             currentIndex: _selectedIndex,
-            selectedItemColor: AppColors.primary,
-            unselectedItemColor: AppColors.gray,
-            backgroundColor: Colors.transparent,
-            onTap: _onItemTapped,
+            selectedItemColor: Colors.white,
+            unselectedItemColor: AppColors.primaryLight,
+            onTap: (index) {
+              if (pages[index]['path'] == '/login' && authProvider.isLoggedIn) {
+                authProvider.logout();
+                GoRouter.of(context).go('/login');
+              } else if (pages[index]['path'] == '/profile' && !authProvider.isLoggedIn) {
+                GoRouter.of(context).go('/login');
+              } else {
+                _onItemTapped(index);
+              }
+            },
             elevation: 0,
           ),
         ),

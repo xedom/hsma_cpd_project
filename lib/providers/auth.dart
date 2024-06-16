@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
-class AuthProvider with ChangeNotifier {
-  bool _isAuthenticated = false;
-  bool get isAuthenticated => _isAuthenticated;
+class AuthProvider extends ChangeNotifier {
+  bool _isLoggedIn = false;
 
-  void login(String email, String password) {
-    if (email == "pedro" && password == "1234") {
-      _isAuthenticated = true;
-      notifyListeners();
-    }
+  bool get isLoggedIn => _isLoggedIn;
+
+  void login(String username, String password) {
+    // Add your authentication logic here
+    _isLoggedIn = true;
+    notifyListeners();
   }
 
   void logout() {
-    _isAuthenticated = false;
+    _isLoggedIn = false;
     notifyListeners();
   }
 }

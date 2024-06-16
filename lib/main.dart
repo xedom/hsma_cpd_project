@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:hsma_cpd_project/screens/game_coinflip.dart';
 import 'package:hsma_cpd_project/screens/coins.dart';
 import 'package:hsma_cpd_project/screens/game_crash.dart';
@@ -9,13 +10,48 @@ import 'package:hsma_cpd_project/screens/home.dart';
 import 'package:hsma_cpd_project/screens/login.dart';
 import 'package:hsma_cpd_project/screens/profile.dart';
 import 'package:hsma_cpd_project/widgets/app_shell.dart';
+import 'package:hsma_cpd_project/providers/auth.dart';
 import 'package:hsma_cpd_project/constants.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
-final router = GoRouter(
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)],
+        ),
+      ),
+      child: MaterialApp.router(
+        routerConfig: _router,
+        title: 'CPD App',
+        theme: ThemeData(
+          primaryColor: AppColors.primary,
+          colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
+          useMaterial3: true,
+        ),
+        debugShowCheckedModeBanner: false,
+      ),
+    );
+  }
+}
+
+final GoRouter _router = GoRouter(
   initialLocation: '/home',
   routes: [
     ShellRoute(
@@ -49,9 +85,9 @@ final router = GoRouter(
           builder: (context, state) => const GameHiLoPage(),
         ),
         GoRoute(
-          name: 'profile',
-          path: '/profile',
-          builder: (context, state) => const ProfilePage(),
+          name: 'coins',
+          path: '/coins',
+          builder: (context, state) => const CoinsPage(),
         ),
         GoRoute(
           name: 'login',
@@ -59,38 +95,11 @@ final router = GoRouter(
           builder: (context, state) => const LoginScreen(),
         ),
         GoRoute(
-          name: 'coins',
-          path: '/coins',
-          builder: (context, state) => const CoinsPage(),
-        )
+          name: 'profile',
+          path: '/profile',
+          builder: (context, state) => const ProfilePage(),
+        ),
       ],
     ),
   ],
 );
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)],
-        ),
-      ),
-      child: MaterialApp.router(
-        routerConfig: router,
-        title: 'CPD App',
-        theme: ThemeData(
-          primaryColor: AppColors.primary,
-          colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
-          useMaterial3: true,
-        ),
-        debugShowCheckedModeBanner: false,
-      ),
-    );
-  }
-}
