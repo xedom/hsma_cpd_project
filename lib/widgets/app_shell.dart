@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hsma_cpd_project/widgets/avatar.dart';
+import '../constants.dart';
 
 class BottomNavBarShell extends StatefulWidget {
   final Widget child;
@@ -23,7 +24,6 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
   ];
 
   int _selectedIndex = 0;
-  // final String _title = pages[0]['name']!;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -37,16 +37,16 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
+        backgroundColor: AppColors.primary,
         leading: const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: AvatarWithFallback(
-              imageUrl: 'https://xed.im/img/pingu.jpg',
-              radius: 30,
-            )),
+          padding: EdgeInsets.all(8.0),
+          child: AvatarWithFallback(
+            imageUrl: 'https://xed.im/img/pingu.jpg',
+            radius: 30,
+          ),
+        ),
         title: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          // children: [Text('Title', style: TextStyle(color: Colors.white))],
         ),
         actions: [
           Padding(
@@ -76,7 +76,6 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            // icon: Icon(Icons.poker_chip),
             icon: Icon(Icons.games),
             label: 'Roulette',
           ),
@@ -89,7 +88,6 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
             label: 'Crash',
           ),
           BottomNavigationBarItem(
-            // icon: Icon(Icons.playing_cards),
             icon: Icon(Icons.card_membership),
             label: 'Hi-Lo',
           ),
@@ -103,7 +101,8 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
+        selectedItemColor: AppColors.primary,
+        unselectedItemColor: AppColors.primary.withOpacity(0.5),
         onTap: _onItemTapped,
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../constants.dart';
 
 class CoinPacketCard extends StatelessWidget {
   final int amount;
@@ -18,7 +19,7 @@ class CoinPacketCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 10),
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.teal.withOpacity(0.1),
+        color: AppColors.primaryLight.withOpacity(0.1),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
@@ -26,7 +27,7 @@ class CoinPacketCard extends StatelessWidget {
           const Icon(
             Icons.monetization_on,
             size: 40,
-            color: Colors.teal,
+            color: AppColors.primary,
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -35,18 +36,18 @@ class CoinPacketCard extends StatelessWidget {
               children: [
                 Text(
                   name,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.teal[700],
+                    color: AppColors.primaryDark,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   '$amount coins',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
-                    color: Colors.teal[500],
+                    color: AppColors.primary,
                   ),
                 ),
               ],

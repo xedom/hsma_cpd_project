@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hsma_cpd_project/widgets/coin_packet_card.dart';
+import '../widgets/coin_packet_card.dart';
+import '../constants.dart';
 
 class CoinsPage extends StatelessWidget {
   const CoinsPage({super.key});
@@ -25,7 +26,7 @@ class CoinsPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Colors.teal,
+                color: AppColors.primary,
               ),
             ),
             const SizedBox(height: 20),
