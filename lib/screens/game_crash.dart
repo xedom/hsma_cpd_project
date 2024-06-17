@@ -5,7 +5,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:hsma_cpd_project/widgets/button_custom.dart';
 import 'package:hsma_cpd_project/widgets/field_input.dart';
-import 'package:hsma_cpd_project/constants.dart';
 
 class GameCrashPage extends StatefulWidget {
   const GameCrashPage({super.key});
@@ -145,7 +144,8 @@ class GameCrashPageState extends State<GameCrashPage> {
                   if (_rocketPath.isNotEmpty)
                     Positioned(
                       left: _rocketPath.last.x * 20, // Adjust position scaling
-                      top: 300 - (_rocketPath.last.y * 10), // Adjust position scaling
+                      top: 300 -
+                          (_rocketPath.last.y * 10), // Adjust position scaling
                       child: Image.asset(
                         'assets/rocket.png',
                         width: 50,
@@ -157,7 +157,10 @@ class GameCrashPageState extends State<GameCrashPage> {
               const SizedBox(height: 20),
               Text(
                 _message,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
               ),
               const SizedBox(height: 10),
               Text(
@@ -169,14 +172,16 @@ class GameCrashPageState extends State<GameCrashPage> {
                 hint: 'Your Guess (e.g., x1.56)',
                 controller: _guessController,
                 icon: Icons.rocket_launch,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
               ),
               const SizedBox(height: 10),
               FieldInput(
                 hint: 'Bet Amount',
                 controller: _betController,
                 icon: Icons.attach_money,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
               ),
               const SizedBox(height: 20),
               _gameRunning

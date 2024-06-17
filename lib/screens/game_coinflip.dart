@@ -20,7 +20,7 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
   AnimationController? _animationController;
   Animation<double>? _animation;
   bool _showFront = true;
-  int _rotationCount = Random().nextInt(3) + 1;
+  int _rotationCount = Random().nextInt(5) + 1;
 
   @override
   void initState() {
@@ -59,7 +59,7 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
       _animationController?.duration =
           Duration(seconds: 1 + Random().nextInt(3));
 
-      _animationController?.forward(from: 0).then((_) {
+      _animationController?.forward().then((_) {
         setState(() {
           _showFront = !_showFront;
         });
@@ -71,11 +71,12 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
     return AnimatedBuilder(
       animation: _animation!,
       builder: (context, child) {
-        final angle = _animation!.value * 2 * pi * _rotationCount;
+        final angle = _animation!.value * 2 * pi;
         final transform = Matrix4.identity()
           ..setEntry(3, 2, 0.001)
           ..rotateY(angle);
-        final showBack = (angle % (2 * pi)) > pi;
+        // final showBack = (angle % (2 * pi)) > pi;
+        final showBack = (angle + pi * 0.5 % (2 * pi)) > pi;
 
         return Transform(
           transform: transform,
@@ -184,7 +185,8 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
                 hint: 'Bet Amount',
                 controller: _betController,
                 icon: Icons.attach_money,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
               ),
               const SizedBox(height: 20),
               CustomButton(

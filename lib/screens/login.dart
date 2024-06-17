@@ -100,7 +100,8 @@ class LoginScreenState extends State<LoginScreen> {
                           },
                           activeColor: AppColors.primary,
                         ),
-                        const Text('Remember me', style: TextStyle(color: Colors.white)),
+                        const Text('Remember me',
+                            style: TextStyle(color: Colors.white)),
                       ],
                     ),
                     TextButton(
@@ -118,18 +119,20 @@ class LoginScreenState extends State<LoginScreen> {
                   onPressed: submit,
                 ),
                 const SizedBox(height: 20),
-                const Text("Or", style: TextStyle(fontSize: 16, color: Colors.white)),
+                const Text("Or",
+                    style: TextStyle(fontSize: 16, color: Colors.white)),
                 const SizedBox(height: 20),
                 SecondaryButton(
-                      text: 'GOOGLE',
-                      image: 'assets/google_logo.png',
-                      onPressed: () {},
-                    ),
+                  text: 'GOOGLE',
+                  image: 'assets/google_logo.png',
+                  onPressed: () {},
+                ),
                 const SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Don't have an account?", style: TextStyle(color: Colors.white)),
+                    const Text("Don't have an account?",
+                        style: TextStyle(color: Colors.white)),
                     TextButton(
                       onPressed: () {},
                       child: const Text(

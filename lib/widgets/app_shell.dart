@@ -37,12 +37,9 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
       {'name': 'Crash', 'path': '/crash', 'icon': Icons.rocket_launch},
       {'name': 'Hi-Lo', 'path': '/hi-lo', 'icon': Icons.card_membership},
       if (authProvider.isLoggedIn)
-        {'name': 'Profile', 'path': '/profile', 'icon': Icons.account_circle},
-      {
-        'name': authProvider.isLoggedIn ? 'Logout' : 'Login',
-        'path': authProvider.isLoggedIn ? '/logout' : '/login',
-        'icon': authProvider.isLoggedIn ? Icons.logout : Icons.login
-      },
+        {'name': 'Profile', 'path': '/profile', 'icon': Icons.account_circle}
+      else
+        {'name': 'Login', 'path': '/login', 'icon': Icons.login},
     ];
 
     return Scaffold(
@@ -65,7 +62,8 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
               child: GestureDetector(
                 onTap: () => GoRouter.of(context).go('/coins'),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
                     color: Colors.white.withOpacity(0.2),
@@ -122,7 +120,8 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
               if (pages[index]['path'] == '/login' && authProvider.isLoggedIn) {
                 authProvider.logout();
                 GoRouter.of(context).go('/login');
-              } else if (pages[index]['path'] == '/profile' && !authProvider.isLoggedIn) {
+              } else if (pages[index]['path'] == '/profile' &&
+                  !authProvider.isLoggedIn) {
                 GoRouter.of(context).go('/login');
               } else {
                 _onItemTapped(index);

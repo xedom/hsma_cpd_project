@@ -71,7 +71,7 @@ class RouletteLogic with ChangeNotifier {
 
     _controller.duration =
         Duration(milliseconds: (1000 * initialVelocity).toInt());
-    _controller.forward(from: 0);
+    _controller.forward();
 
     _controller.addListener(() {
       // final progress = _controller.value;
