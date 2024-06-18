@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hsma_cpd_project/widgets/button_custom.dart';
 import 'package:hsma_cpd_project/widgets/field_input.dart';
 import '../logic/hilo_logic.dart';
-import '../constants.dart';
+import 'package:provider/provider.dart';
+import 'package:hsma_cpd_project/providers/auth.dart';
 
 class GameHiLoPage extends StatefulWidget {
   const GameHiLoPage({super.key});
@@ -19,8 +20,28 @@ class GameHiLoPageState extends State<GameHiLoPage> {
   void _updateState() {
     setState(() {});
     if (_listKey.currentState != null) {
-      _listKey.currentState!.insertItem(0, duration: const Duration(milliseconds: 300));
+      _listKey.currentState!
+          .insertItem(0, duration: const Duration(milliseconds: 300));
     }
+  }
+
+  Future<void> _saveGuess(bool isHigher,
+      [bool? isJoker, bool? isNumber, bool? isRed]) async {
+    int bet = int.tryParse(_betController.text) ?? 0;
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    String? token = authProvider.token;
+
+    if (isJoker != null && isJoker) {
+      await _logic.guessJoker(bet);
+    } else if (isNumber != null) {
+      await _logic.guessNumberOrFigure(isNumber, bet);
+    } else if (isRed != null) {
+      await _logic.guessColor(isRed, bet);
+    } else {
+      await _logic.guess(isHigher, bet);
+    }
+
+    _updateState();
   }
 
   @override
@@ -51,7 +72,8 @@ class GameHiLoPageState extends State<GameHiLoPage> {
                 ),
               ),
               const SizedBox(height: 10),
-              Image.asset('assets/cards/${_logic.currentCard}.png', height: 300),
+              Image.asset('assets/cards/${_logic.currentCard}.png',
+                  height: 300),
               const SizedBox(height: 20),
               Text(
                 _logic.message,
@@ -75,61 +97,40 @@ class GameHiLoPageState extends State<GameHiLoPage> {
                 alignment: WrapAlignment.center,
                 children: [
                   CustomButton(
-                    label: 'Higher (${_logic.calculateProbability(true).toStringAsFixed(1)}%)',
-                    onPressed: () {
-                      int bet = int.tryParse(_betController.text) ?? 0;
-                      _logic.guess(true, bet);
-                      _updateState();
-                    },
+                    label:
+                        'Higher (${_logic.calculateProbability(true).toStringAsFixed(1)}%)',
+                    onPressed: () => _saveGuess(true),
                   ),
                   CustomButton(
-                    label: 'Lower (${_logic.calculateProbability(false).toStringAsFixed(1)}%)',
-                    onPressed: () {
-                      int bet = int.tryParse(_betController.text) ?? 0;
-                      _logic.guess(false, bet);
-                      _updateState();
-                    },
+                    label:
+                        'Lower (${_logic.calculateProbability(false).toStringAsFixed(1)}%)',
+                    onPressed: () => _saveGuess(false),
                   ),
                   CustomButton(
-                    label: 'Joker (${_logic.calculateJokerProbability().toStringAsFixed(1)}%)',
-                    onPressed: () {
-                      int bet = int.tryParse(_betController.text) ?? 0;
-                      _logic.guessJoker(bet);
-                      _updateState();
-                    },
+                    label:
+                        'Joker (${_logic.calculateJokerProbability().toStringAsFixed(1)}%)',
+                    onPressed: () => _saveGuess(false, true),
                   ),
                   CustomButton(
-                    label: 'Number: 2-9 (${_logic.calculateNumberProbability().toStringAsFixed(1)}%)',
-                    onPressed: () {
-                      int bet = int.tryParse(_betController.text) ?? 0;
-                      _logic.guessNumberOrFigure(true, bet);
-                      _updateState();
-                    },
+                    label:
+                        'Number: 2-9 (${_logic.calculateNumberProbability().toStringAsFixed(1)}%)',
+                    onPressed: () => _saveGuess(false, false, true),
                   ),
                   CustomButton(
-                    label: 'Figure: JQKA (${_logic.calculateFigureProbability().toStringAsFixed(1)}%)',
-                    onPressed: () {
-                      int bet = int.tryParse(_betController.text) ?? 0;
-                      _logic.guessNumberOrFigure(false, bet);
-                      _updateState();
-                    },
+                    label:
+                        'Figure: JQKA (${_logic.calculateFigureProbability().toStringAsFixed(1)}%)',
+                    onPressed: () => _saveGuess(false, false, false),
                   ),
                   CustomButton(
-                    label: 'Red (${_logic.calculateColorProbability(true).toStringAsFixed(1)}%)',
-                    onPressed: () {
-                      int bet = int.tryParse(_betController.text) ?? 0;
-                      _logic.guessColor(true, bet);
-                      _updateState();
-                    },
+                    label:
+                        'Red (${_logic.calculateColorProbability(true).toStringAsFixed(1)}%)',
+                    onPressed: () => _saveGuess(false, false, false, true),
                     color: Colors.red,
                   ),
                   CustomButton(
-                    label: 'Black (${_logic.calculateColorProbability(false).toStringAsFixed(1)}%)',
-                    onPressed: () {
-                      int bet = int.tryParse(_betController.text) ?? 0;
-                      _logic.guessColor(false, bet);
-                      _updateState();
-                    },
+                    label:
+                        'Black (${_logic.calculateColorProbability(false).toStringAsFixed(1)}%)',
+                    onPressed: () => _saveGuess(false, false, false, false),
                     color: Colors.black,
                     textColor: Colors.white,
                   ),
