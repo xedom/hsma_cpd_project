@@ -31,7 +31,6 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
     final authProvider = Provider.of<AuthProvider>(context);
 
     pages = [
-      {'name': 'Home', 'path': '/home', 'icon': Icons.home},
       {'name': 'Roulette', 'path': '/roulette', 'icon': Icons.games},
       {'name': 'Coin Flip', 'path': '/coin-flip', 'icon': Icons.casino},
       {'name': 'Crash', 'path': '/crash', 'icon': Icons.rocket_launch},
@@ -85,10 +84,6 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: AppColors.primary,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
@@ -98,10 +93,6 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
           ],
         ),
         child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
           child: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             backgroundColor: AppColors.primary,

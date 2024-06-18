@@ -6,7 +6,6 @@ import 'package:hsma_cpd_project/screens/coins.dart';
 import 'package:hsma_cpd_project/screens/game_crash.dart';
 import 'package:hsma_cpd_project/screens/game_hilo.dart';
 import 'package:hsma_cpd_project/screens/game_roulette.dart';
-import 'package:hsma_cpd_project/screens/home.dart';
 import 'package:hsma_cpd_project/screens/login.dart';
 import 'package:hsma_cpd_project/screens/profile.dart';
 import 'package:hsma_cpd_project/widgets/app_shell.dart';
@@ -16,9 +15,7 @@ import 'package:hsma_cpd_project/constants.dart';
 void main() {
   runApp(
     MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
-      ],
+      providers: [ChangeNotifierProvider(create: (_) => AuthProvider())],
       child: const MyApp(),
     ),
   );
@@ -52,18 +49,13 @@ class MyApp extends StatelessWidget {
 }
 
 final GoRouter _router = GoRouter(
-  initialLocation: '/home',
+  initialLocation: '/login',
   routes: [
     ShellRoute(
       builder: (context, state, child) {
         return BottomNavBarShell(child: child);
       },
       routes: [
-        GoRoute(
-          name: 'home',
-          path: '/home',
-          builder: (context, state) => const HomePage(),
-        ),
         GoRoute(
           name: 'roulette',
           path: '/roulette',

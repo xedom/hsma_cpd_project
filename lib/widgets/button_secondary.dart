@@ -34,10 +34,7 @@ class SecondaryButton extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            icon: ImageIcon(
-              AssetImage(image),
-              color: Colors.white,
-            ),
+            icon: ImageIcon(AssetImage(image), color: Colors.white),
             label: Text(
               text,
               style: const TextStyle(color: Colors.white, fontSize: 16),

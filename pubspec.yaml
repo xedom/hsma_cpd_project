@@ -44,7 +44,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/google_logo.png
+    - assets/google_logo.webp
     - assets/rocket.png
     - assets/roulette.png
     - assets/roulette_ball.png

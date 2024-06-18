@@ -27,7 +27,7 @@ class LoginScreenState extends State<LoginScreen> {
 
     if (usernameController.text == "pedro" &&
         passwordController.text == "1234") {
-      GoRouter.of(context).go('/home');
+      GoRouter.of(context).go('/profile');
     }
   }
 
@@ -66,14 +66,9 @@ class LoginScreenState extends State<LoginScreen> {
                     color: Colors.white,
                   ),
                 ),
-                const SizedBox(height: 10),
-                const Text(
-                  'Enter your login information',
-                  style: TextStyle(color: Colors.white70),
-                ),
                 const SizedBox(height: 30),
                 FieldInput(
-                  hint: "cliveross@gmail.com",
+                  hint: "Username",
                   controller: usernameController,
                   autofocus: true,
                   icon: Icons.email,
@@ -85,49 +80,20 @@ class LoginScreenState extends State<LoginScreen> {
                   obscureText: true,
                   icon: Icons.lock,
                 ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: rememberMe,
-                          onChanged: (value) {
-                            setState(() {
-                              rememberMe = value!;
-                            });
-                          },
-                          activeColor: AppColors.primary,
-                        ),
-                        const Text('Remember me',
-                            style: TextStyle(color: Colors.white)),
-                      ],
-                    ),
-                    TextButton(
-                      onPressed: () {},
-                      child: const Text(
-                        'Forgot password',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ],
-                ),
                 const SizedBox(height: 20),
                 PrimaryButton(
                   text: 'LOGIN',
                   onPressed: submit,
                 ),
                 const SizedBox(height: 20),
-                const Text("Or",
-                    style: TextStyle(fontSize: 16, color: Colors.white)),
-                const SizedBox(height: 20),
-                SecondaryButton(
-                  text: 'GOOGLE',
-                  image: 'assets/google_logo.png',
-                  onPressed: () {},
-                ),
-                const SizedBox(height: 30),
+                // const Text("OR", style: TextStyle(color: Colors.white)),
+                // const SizedBox(height: 20),
+                // SecondaryButton(
+                //   text: 'GOOGLE',
+                //   image: 'assets/google_logo.webp',
+                //   onPressed: () {},
+                // ),
+                // const SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
