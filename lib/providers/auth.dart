@@ -9,13 +9,15 @@ class AuthProvider extends ChangeNotifier {
   bool get isLoggedIn => _isLoggedIn;
   String? get token => _token;
 
-  Future<void> login(String username, String password) async {
+  Future<bool> login(String username, String password) async {
     String? token = await _backendService.login(username, password);
     if (token != null) {
       _isLoggedIn = true;
       _token = token;
       notifyListeners();
+      return true;
     }
+    return false;
   }
 
   Future<void> logout() async {

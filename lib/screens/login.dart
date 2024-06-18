@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hsma_cpd_project/constants.dart';
 import 'package:hsma_cpd_project/widgets/button_primary.dart';
-import 'package:hsma_cpd_project/widgets/button_secondary.dart';
 import 'package:provider/provider.dart';
 import 'package:hsma_cpd_project/providers/auth.dart';
 import 'package:hsma_cpd_project/widgets/field_input.dart';
@@ -17,17 +16,22 @@ class LoginScreen extends StatefulWidget {
 class LoginScreenState extends State<LoginScreen> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  bool rememberMe = false;
 
-  void submit() {
-    Provider.of<AuthProvider>(context, listen: false).login(
+  Future<void> submit() async {
+    bool success =
+        await Provider.of<AuthProvider>(context, listen: false).login(
       usernameController.text,
       passwordController.text,
     );
 
-    if (usernameController.text == "pedro" &&
-        passwordController.text == "1234") {
+    if (!mounted) return;
+
+    if (success) {
       GoRouter.of(context).go('/profile');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login failed, please try again.')),
+      );
     }
   }
 
@@ -51,64 +55,59 @@ class LoginScreenState extends State<LoginScreen> {
             colors: [Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)],
           ),
         ),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 80),
-                const Text(
-                  'LOGIN TO YOUR ACCOUNT',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 30),
-                FieldInput(
-                  hint: "Username",
-                  controller: usernameController,
-                  autofocus: true,
-                  icon: Icons.email,
-                ),
-                const SizedBox(height: 20),
-                FieldInput(
-                  hint: "Password",
-                  controller: passwordController,
-                  obscureText: true,
-                  icon: Icons.lock,
-                ),
-                const SizedBox(height: 20),
-                PrimaryButton(
-                  text: 'LOGIN',
-                  onPressed: submit,
-                ),
-                const SizedBox(height: 20),
-                // const Text("OR", style: TextStyle(color: Colors.white)),
-                // const SizedBox(height: 20),
-                // SecondaryButton(
-                //   text: 'GOOGLE',
-                //   image: 'assets/google_logo.webp',
-                //   onPressed: () {},
-                // ),
-                // const SizedBox(height: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text("Don't have an account?",
-                        style: TextStyle(color: Colors.white)),
-                    TextButton(
-                      onPressed: () {},
-                      child: const Text(
-                        'Sign Up',
-                        style: TextStyle(color: AppColors.primary),
-                      ),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 80),
+                  const Text(
+                    'LOGIN TO YOUR ACCOUNT',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                  const SizedBox(height: 30),
+                  FieldInput(
+                    hint: "Username",
+                    controller: usernameController,
+                    autofocus: true,
+                    icon: Icons.email,
+                  ),
+                  const SizedBox(height: 20),
+                  FieldInput(
+                    hint: "Password",
+                    controller: passwordController,
+                    obscureText: true,
+                    icon: Icons.lock,
+                  ),
+                  const SizedBox(height: 20),
+                  PrimaryButton(text: 'LOGIN', onPressed: submit),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Don't have an account?",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          GoRouter.of(context).go('/register');
+                        },
+                        child: const Text(
+                          'Sign Up',
+                          style: TextStyle(color: AppColors.primary),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
