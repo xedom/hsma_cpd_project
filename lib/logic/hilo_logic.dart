@@ -1,5 +1,9 @@
 import 'dart:math';
 
+import 'package:hsma_cpd_project/logic/backend.dart';
+
+enum GuessType { higher, lower, joker, number, figure, red, black }
+
 class HiLoLogic {
   final List<String> deck = [
     'clubs_1',
@@ -57,6 +61,7 @@ class HiLoLogic {
     'joker'
   ];
 
+  final BackendService _backendService;
   String currentCard = '';
   String nextCard = '';
   String message = '';
@@ -64,8 +69,12 @@ class HiLoLogic {
   List<String> previousCards = [];
   int coins = 100;
 
-  HiLoLogic() {
-    currentCard = _getRandomCard();
+  HiLoLogic(this._backendService) {
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    currentCard = await _backendService.getHiLoCurrentCard();
   }
 
   String _getRandomCard() {
@@ -73,38 +82,82 @@ class HiLoLogic {
     return deck[random.nextInt(deck.length)];
   }
 
-  double calculateProbability(bool isHigher) {
+  double calculateProbability(GuessType guessType) {
     int currentCardValue = getCardValue(currentCard);
-    int higherCount =
-        deck.where((card) => getCardValue(card) > currentCardValue).length;
-    int lowerCount =
-        deck.where((card) => getCardValue(card) < currentCardValue).length;
-
-    return isHigher
-        ? (higherCount / deck.length) * 100
-        : (lowerCount / deck.length) * 100;
+    int count;
+    switch (guessType) {
+      case GuessType.higher:
+        count =
+            deck.where((card) => getCardValue(card) > currentCardValue).length;
+        break;
+      case GuessType.lower:
+        count =
+            deck.where((card) => getCardValue(card) < currentCardValue).length;
+        break;
+      case GuessType.joker:
+        count = 1;
+        break;
+      case GuessType.number:
+        count = deck.where((card) => _isNumber(card)).length;
+        break;
+      case GuessType.figure:
+        count = deck.where((card) => _isFigure(card)).length;
+        break;
+      case GuessType.red:
+        count = deck.where((card) => _isRed(card)).length;
+        break;
+      case GuessType.black:
+        count = deck.where((card) => !_isRed(card)).length;
+        break;
+    }
+    return (count / deck.length) * 100;
   }
 
-  double calculateJokerProbability() {
-    return (1 / deck.length) * 100;
+  String getBetMultiplier(GuessType guessType) {
+    switch (guessType) {
+      case GuessType.joker:
+        return '10x';
+
+      case GuessType.number:
+        return '1.5x';
+
+      case GuessType.figure:
+        return '3x';
+
+      case GuessType.red:
+      case GuessType.black:
+        return '2x';
+
+      case GuessType.higher:
+        {
+          int currentCardValue = getCardValue(currentCard);
+          double probability = deck
+                  .where((card) => getCardValue(card) >= currentCardValue)
+                  .length /
+              deck.length;
+          double multiplier =
+              double.parse((1 / probability).toStringAsFixed(2));
+          return '${multiplier}x';
+        }
+
+      case GuessType.lower:
+        {
+          int currentCardValue = getCardValue(currentCard);
+          double probability = deck
+                  .where((card) => getCardValue(card) <= currentCardValue)
+                  .length /
+              deck.length;
+          double multiplier =
+              double.parse((1 / probability).toStringAsFixed(2));
+          return '${multiplier}x';
+        }
+
+      default:
+        return '2x';
+    }
   }
 
-  double calculateNumberProbability() {
-    int numberCount = deck.where((card) => _isNumber(card)).length;
-    return (numberCount / deck.length) * 100;
-  }
-
-  double calculateFigureProbability() {
-    int figureCount = deck.where((card) => _isFigure(card)).length;
-    return (figureCount / deck.length) * 100;
-  }
-
-  double calculateColorProbability(bool isRed) {
-    int colorCount = deck.where((card) => _isRed(card) == isRed).length;
-    return (colorCount / deck.length) * 100;
-  }
-
-  void guess(bool isHigher, int bet) {
+  void guess(GuessType guessType, int bet) {
     if (bet > coins || bet <= 0) {
       message = 'Invalid bet amount';
       return;
@@ -114,10 +167,34 @@ class HiLoLogic {
     int currentCardValue = getCardValue(currentCard);
     int nextCardValue = getCardValue(nextCard);
 
-    if ((isHigher && nextCardValue > currentCardValue) ||
-        (!isHigher && nextCardValue < currentCardValue)) {
+    bool correctGuess;
+    switch (guessType) {
+      case GuessType.higher:
+        correctGuess = nextCardValue > currentCardValue;
+        break;
+      case GuessType.lower:
+        correctGuess = nextCardValue < currentCardValue;
+        break;
+      case GuessType.joker:
+        correctGuess = nextCard == 'joker';
+        break;
+      case GuessType.number:
+        correctGuess = _isNumber(nextCard);
+        break;
+      case GuessType.figure:
+        correctGuess = _isFigure(nextCard);
+        break;
+      case GuessType.red:
+        correctGuess = _isRed(nextCard);
+        break;
+      case GuessType.black:
+        correctGuess = !_isRed(nextCard);
+        break;
+    }
+
+    if (correctGuess) {
       score++;
-      coins += bet * 2;
+      coins += _getWinnings(guessType, bet);
       message = 'Correct! You won $bet coins.';
     } else {
       score = 0;
@@ -130,74 +207,13 @@ class HiLoLogic {
     currentCard = nextCard;
   }
 
-  void guessJoker(int bet) {
-    if (bet > coins || bet <= 0) {
-      message = 'Invalid bet amount';
-      return;
+  int _getWinnings(GuessType guessType, int bet) {
+    switch (guessType) {
+      case GuessType.joker:
+        return bet * 10;
+      default:
+        return bet * 2;
     }
-    coins -= bet;
-    nextCard = _getRandomCard();
-
-    if (nextCard == 'joker') {
-      score += 5; // Bonus for guessing Joker correctly
-      coins += bet * 10;
-      message = 'Correct! It\'s a Joker! You won $bet coins.';
-    } else {
-      score = 0;
-      message = 'Wrong! It\'s not a Joker. You lost $bet coins.';
-    }
-    previousCards.add(currentCard);
-    if (previousCards.length > 10) {
-      previousCards.removeAt(0);
-    }
-    currentCard = nextCard;
-  }
-
-  void guessNumberOrFigure(bool isNumber, int bet) {
-    if (bet > coins || bet <= 0) {
-      message = 'Invalid bet amount';
-      return;
-    }
-    coins -= bet;
-    nextCard = _getRandomCard();
-    bool isNextCardNumber = _isNumber(nextCard);
-
-    if ((isNumber && isNextCardNumber) || (!isNumber && !isNextCardNumber)) {
-      score++;
-      coins += bet * 2;
-      message = 'Correct! You won $bet coins.';
-    } else {
-      score = 0;
-      message = 'Wrong! You lost $bet coins.';
-    }
-    previousCards.add(currentCard);
-    if (previousCards.length > 10) {
-      previousCards.removeAt(0);
-    }
-    currentCard = nextCard;
-  }
-
-  void guessColor(bool isRed, int bet) {
-    if (bet > coins || bet <= 0) {
-      message = 'Invalid bet amount';
-      return;
-    }
-    coins -= bet;
-    nextCard = _getRandomCard();
-
-    if (_isRed(nextCard) == isRed) {
-      score++;
-      coins += bet * 2;
-      message = 'Correct! You won $bet coins.';
-    } else {
-      score = 0;
-      message = 'Wrong! You lost $bet coins.';
-    }
-    previousCards.add(currentCard);
-    if (previousCards.length > 10) {
-      previousCards.removeAt(0);
-    }
-    currentCard = nextCard;
   }
 
   bool _isNumber(String card) {
@@ -213,14 +229,11 @@ class HiLoLogic {
   }
 
   bool _isRed(String card) {
-    if (card.startsWith('hearts') || card.startsWith('diamonds')) {
-      return true;
-    }
-    return false;
+    return card.startsWith('hearts') || card.startsWith('diamonds');
   }
 
   int getCardValue(String card) {
-    if (card == 'joker') return 14; // Joker is considered the highest value
+    if (card == 'joker') return 14;
     return int.parse(card.split('_')[1]);
   }
 }

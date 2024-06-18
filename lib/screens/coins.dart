@@ -18,8 +18,6 @@ class CoinsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        width: double.infinity,
-        height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -31,7 +29,7 @@ class CoinsPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
               const Text(
                 'Coins Packets',
                 style: TextStyle(
@@ -40,7 +38,7 @@ class CoinsPage extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -48,7 +46,7 @@ class CoinsPage extends StatelessWidget {
                     itemCount: coinPackets.length,
                     itemBuilder: (context, index) {
                       return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        padding: const EdgeInsets.symmetric(vertical: 5.0),
                         child: CoinPacketCard(
                           amount: coinPackets[index]['amount'] as int,
                           price: coinPackets[index]['price'] as double,

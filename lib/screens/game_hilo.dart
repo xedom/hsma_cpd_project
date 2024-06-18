@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hsma_cpd_project/logic/backend.dart';
 import 'package:hsma_cpd_project/widgets/button_custom.dart';
 import 'package:hsma_cpd_project/widgets/field_input.dart';
-import '../logic/hilo_logic.dart';
+import 'package:hsma_cpd_project/logic/hilo_logic.dart' as HiLoLogic;
 import 'package:provider/provider.dart';
 import 'package:hsma_cpd_project/providers/auth.dart';
 
@@ -13,7 +14,7 @@ class GameHiLoPage extends StatefulWidget {
 }
 
 class GameHiLoPageState extends State<GameHiLoPage> {
-  final HiLoLogic _logic = HiLoLogic();
+  final HiLoLogic.HiLoLogic _logic = HiLoLogic.HiLoLogic(BackendService());
   final TextEditingController _betController = TextEditingController();
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
 
@@ -30,16 +31,6 @@ class GameHiLoPageState extends State<GameHiLoPage> {
     int bet = int.tryParse(_betController.text) ?? 0;
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     String? token = authProvider.token;
-
-    // if (isJoker != null && isJoker) {
-    //   await _logic.guessJoker(bet);
-    // } else if (isNumber != null) {
-    //   await _logic.guessNumberOrFigure(isNumber, bet);
-    // } else if (isRed != null) {
-    //   await _logic.guessColor(isRed, bet);
-    // } else {
-    //   await _logic.guess(isHigher, bet);
-    // }
 
     _updateState();
   }
@@ -73,17 +64,18 @@ class GameHiLoPageState extends State<GameHiLoPage> {
               const SizedBox(height: 10),
               Image.asset('assets/cards/${_logic.currentCard}.png',
                   height: 300),
-              const SizedBox(height: 10),
-              Text(
-                _logic.message,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white70,
+              if (_logic.message.isNotEmpty) const SizedBox(height: 10),
+              if (_logic.message.isNotEmpty)
+                Text(
+                  _logic.message,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white70,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
               // --- user inputs ------------------------------
+              const SizedBox(height: 20),
               FieldInput(
                 hint: 'Bet Amount',
                 controller: _betController,
@@ -98,38 +90,38 @@ class GameHiLoPageState extends State<GameHiLoPage> {
                 children: [
                   CustomButton(
                     label:
-                        'Higher (${_logic.calculateProbability(true).toStringAsFixed(1)}%)',
+                        'Higher x${_logic.getBetMultiplier(HiLoLogic.GuessType.higher)}',
                     onPressed: () => _saveGuess(true),
                   ),
                   CustomButton(
                     label:
-                        'Lower (${_logic.calculateProbability(false).toStringAsFixed(1)}%)',
+                        'Lower x${_logic.getBetMultiplier(HiLoLogic.GuessType.lower)}',
                     onPressed: () => _saveGuess(false),
                   ),
                   CustomButton(
                     label:
-                        'Joker (${_logic.calculateJokerProbability().toStringAsFixed(1)}%)',
+                        'Joker x${_logic.getBetMultiplier(HiLoLogic.GuessType.joker)}',
                     onPressed: () => _saveGuess(false, true),
                   ),
                   CustomButton(
                     label:
-                        'Number: 2-9 (${_logic.calculateNumberProbability().toStringAsFixed(1)}%)',
+                        'Number: 2-9 x${_logic.getBetMultiplier(HiLoLogic.GuessType.number)}',
                     onPressed: () => _saveGuess(false, false, true),
                   ),
                   CustomButton(
                     label:
-                        'Figure: JQKA (${_logic.calculateFigureProbability().toStringAsFixed(1)}%)',
+                        'Figure: JQKA x${_logic.getBetMultiplier(HiLoLogic.GuessType.figure)}',
                     onPressed: () => _saveGuess(false, false, false),
                   ),
                   CustomButton(
                     label:
-                        'Red (${_logic.calculateColorProbability(true).toStringAsFixed(1)}%)',
+                        'Red x${_logic.getBetMultiplier(HiLoLogic.GuessType.red)}',
                     onPressed: () => _saveGuess(false, false, false, true),
                     color: Colors.red,
                   ),
                   CustomButton(
                     label:
-                        'Black (${_logic.calculateColorProbability(false).toStringAsFixed(1)}%)',
+                        'Black x${_logic.getBetMultiplier(HiLoLogic.GuessType.black)}',
                     onPressed: () => _saveGuess(false, false, false, false),
                     color: Colors.black,
                     textColor: Colors.white,
