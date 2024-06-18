@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:hsma_cpd_project/logic/backend.dart';
 
 class AuthProvider extends ChangeNotifier {
-  final BackendService _backendService = BackendService();
+  final BackendService _backendService;
   bool _isLoggedIn = false;
   String? _token;
   int _coins = 0;
+
+  AuthProvider(this._backendService);
 
   bool get isLoggedIn => _isLoggedIn;
   String? get token => _token;

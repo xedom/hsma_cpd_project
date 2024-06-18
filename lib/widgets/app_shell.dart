@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:hsma_cpd_project/widgets/avatar.dart';
+import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hsma_cpd_project/providers/auth.dart';
-import '../constants.dart';
+import 'package:hsma_cpd_project/constants.dart';
 
 class BottomNavBarShell extends StatefulWidget {
   final Widget child;
@@ -17,15 +17,6 @@ class BottomNavBarShell extends StatefulWidget {
 class BottomNavBarShellState extends State<BottomNavBarShell> {
   int _selectedIndex = 0;
   List<Map<String, dynamic>> pages = [];
-
-  @override
-  void initState() {
-    super.initState();
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    if (authProvider.isLoggedIn) {
-      authProvider.fetchCoins();
-    }
-  }
 
   void _onItemTapped(int index) {
     setState(() {
