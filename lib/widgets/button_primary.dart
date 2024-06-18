@@ -15,6 +15,9 @@ class PrimaryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
+      constraints: const BoxConstraints(
+        maxWidth: 360,
+      ),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [AppColors.primary, AppColors.primaryLight],

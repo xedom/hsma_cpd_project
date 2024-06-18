@@ -36,7 +36,8 @@ class FieldInput extends StatelessWidget {
             autofocus: autofocus,
             keyboardType: keyboardType,
             decoration: InputDecoration(
-              prefixIcon: icon != null ? Icon(icon, color: Colors.white70) : null,
+              prefixIcon:
+                  icon != null ? Icon(icon, color: Colors.white70) : null,
               hintText: hint,
               hintStyle: const TextStyle(color: Colors.white70),
               filled: true,
@@ -53,7 +54,8 @@ class FieldInput extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12.0),
                 borderSide: BorderSide.none,
               ),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
             ),
             style: const TextStyle(color: Colors.white),
           ),
