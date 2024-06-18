@@ -24,6 +24,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  mockito: ^5.0.0
 
   cupertino_icons: ^1.0.6
   go_router: ^14.1.3

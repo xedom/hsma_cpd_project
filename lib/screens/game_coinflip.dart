@@ -20,7 +20,6 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
   AnimationController? _animationController;
   Animation<double>? _animation;
   bool _showFront = true;
-  int _rotationCount = Random().nextInt(5) + 1;
 
   @override
   void initState() {
@@ -72,15 +71,14 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
     _coinResult = _isHeads ? 'Heads' : 'Tails';
 
     // Vergleichen Sie _userGuess und _coinResult, um zu bestimmen, ob der Benutzer gewonnen oder verloren hat
-    if (_userGuess == _coinResult) {
-        _message = 'Sie haben ${bet * 2} Münzen gewonnen!';
+    if (_userGuess != _coinResult) {
+      _message = 'Sie haben ${bet * 2} Münzen gewonnen!';
     } else {
-        _message = 'Sie haben ${bet.toStringAsFixed(2)} Münzen verloren!';
+      _message = 'Sie haben ${bet.toStringAsFixed(2)} Münzen verloren!';
     }
 
     // Führen Sie die Münzwurfanimation aus
-    _rotationCount = 1 + Random().nextInt(3);
-    _animationController?.duration = Duration(seconds: 1 + Random().nextInt(3));
+    _animationController?.reset();
     _animationController?.forward().then((_) {
       setState(() {
         _showFront = !_showFront;
@@ -96,7 +94,7 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
         final transform = Matrix4.identity()
           ..setEntry(3, 2, 0.001)
           ..rotateY(angle);
-        final showBack = (angle + pi * 0.5 % (2 * pi)) > pi;
+        final showBack = angle > pi;
 
         return Transform(
           transform: transform,
