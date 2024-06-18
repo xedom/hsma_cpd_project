@@ -4,7 +4,7 @@ import 'package:hsma_cpd_project/widgets/button_custom.dart';
 import 'package:hsma_cpd_project/widgets/field_input.dart';
 
 class GameCoinFlipPage extends StatefulWidget {
-  const GameCoinFlipPage({super.key});
+  const GameCoinFlipPage({Key? key}) : super(key: key);
 
   @override
   GameCoinFlipPageState createState() => GameCoinFlipPageState();
@@ -43,26 +43,47 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
   }
 
   void _flipCoin() {
-    setState(() {
-      double bet = double.tryParse(_betController.text) ?? 0;
+    // Überprüfen Sie, ob das Wettfeld leer ist
+    if (_betController.text.isEmpty) {
+      setState(() {
+        _message = 'Bitte geben Sie einen Wetteinsatz ein.';
+      });
+      return;
+    }
 
-      _isHeads = Random().nextBool();
-      _coinResult = _isHeads ? 'Heads' : 'Tails';
+    // Überprüfen Sie, ob der Benutzer eine Seite ausgewählt hat
+    if (_userGuess.isEmpty) {
+      setState(() {
+        _message = 'Bitte wählen Sie eine Seite der Münze aus.';
+      });
+      return;
+    }
 
-      if (_userGuess == _coinResult) {
-        _message = 'You won ${bet * 2} coins!';
-      } else {
-        _message = 'You lost ${bet.toStringAsFixed(2)} coins!';
-      }
+    final bet = double.tryParse(_betController.text);
+    if (bet == null || bet <= 0) {
+      setState(() {
+        _message = 'Bitte geben Sie einen gültigen Wetteinsatz ein.';
+      });
+      return;
+    }
 
-      _rotationCount = 1 + Random().nextInt(3);
-      _animationController?.duration =
-          Duration(seconds: 1 + Random().nextInt(3));
+    // Aktualisieren Sie _isHeads und _coinResult basierend auf dem Ergebnis von Random().nextBool()
+    _isHeads = Random().nextBool();
+    _coinResult = _isHeads ? 'Heads' : 'Tails';
 
-      _animationController?.forward().then((_) {
-        setState(() {
-          _showFront = !_showFront;
-        });
+    // Vergleichen Sie _userGuess und _coinResult, um zu bestimmen, ob der Benutzer gewonnen oder verloren hat
+    if (_userGuess == _coinResult) {
+        _message = 'Sie haben ${bet * 2} Münzen gewonnen!';
+    } else {
+        _message = 'Sie haben ${bet.toStringAsFixed(2)} Münzen verloren!';
+    }
+
+    // Führen Sie die Münzwurfanimation aus
+    _rotationCount = 1 + Random().nextInt(3);
+    _animationController?.duration = Duration(seconds: 1 + Random().nextInt(3));
+    _animationController?.forward().then((_) {
+      setState(() {
+        _showFront = !_showFront;
       });
     });
   }
@@ -75,7 +96,6 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
         final transform = Matrix4.identity()
           ..setEntry(3, 2, 0.001)
           ..rotateY(angle);
-        // final showBack = (angle % (2 * pi)) > pi;
         final showBack = (angle + pi * 0.5 % (2 * pi)) > pi;
 
         return Transform(
