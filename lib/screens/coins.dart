@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../widgets/coin_packet_card.dart';
+import '../providers/auth.dart';
 
 class CoinsPage extends StatelessWidget {
   const CoinsPage({super.key});
@@ -51,6 +53,8 @@ class CoinsPage extends StatelessWidget {
                           amount: coinPackets[index]['amount'] as int,
                           price: coinPackets[index]['price'] as double,
                           name: coinPackets[index]['name'] as String,
+                          onTap: () => _addCoins(
+                              context, coinPackets[index]['amount'] as int),
                         ),
                       );
                     },
@@ -61,6 +65,15 @@ class CoinsPage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void _addCoins(BuildContext context, int amount) {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    authProvider.addCoins(amount);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Added $amount coins to your account!')),
     );
   }
 }

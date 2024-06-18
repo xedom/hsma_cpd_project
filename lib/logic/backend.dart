@@ -74,4 +74,14 @@ class BackendService {
     }
     return 0;
   }
+
+  Future<bool> addCoins(String username, int amount) async {
+    await _simulateNetworkDelay();
+
+    if (_userCoins.containsKey(username)) {
+      _userCoins[username] = _userCoins[username]! + amount;
+      return true;
+    }
+    return false;
+  }
 }

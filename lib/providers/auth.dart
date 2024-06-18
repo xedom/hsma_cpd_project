@@ -16,7 +16,7 @@ class AuthProvider extends ChangeNotifier {
     if (token != null) {
       _isLoggedIn = true;
       _token = token;
-      _coins = await _backendService.getCoins(username);
+      _coins = await _backendService.getCoins(username); // Fetch coins
       notifyListeners();
       return true;
     }
@@ -50,5 +50,10 @@ class AuthProvider extends ChangeNotifier {
       _coins = await _backendService.getCoins(currentUser!);
       notifyListeners();
     }
+  }
+
+  void addCoins(int amount) {
+    _coins += amount;
+    notifyListeners();
   }
 }
