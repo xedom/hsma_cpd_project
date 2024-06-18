@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../widgets/coin_packet_card.dart';
-import '../constants.dart';
 
 class CoinsPage extends StatelessWidget {
   const CoinsPage({super.key});

@@ -5,15 +5,18 @@ class AuthProvider extends ChangeNotifier {
   final BackendService _backendService = BackendService();
   bool _isLoggedIn = false;
   String? _token;
+  int _coins = 0;
 
   bool get isLoggedIn => _isLoggedIn;
   String? get token => _token;
+  int get coins => _coins;
 
   Future<bool> login(String username, String password) async {
     String? token = await _backendService.login(username, password);
     if (token != null) {
       _isLoggedIn = true;
       _token = token;
+      _coins = await _backendService.getCoins(username);
       notifyListeners();
       return true;
     }
@@ -32,6 +35,7 @@ class AuthProvider extends ChangeNotifier {
     await _backendService.logout();
     _isLoggedIn = false;
     _token = null;
+    _coins = 0;
     notifyListeners();
   }
 
@@ -39,5 +43,12 @@ class AuthProvider extends ChangeNotifier {
 
   bool verifyToken(String token) {
     return _backendService.verifyToken(token);
+  }
+
+  Future<void> fetchCoins() async {
+    if (currentUser != null) {
+      _coins = await _backendService.getCoins(currentUser!);
+      notifyListeners();
+    }
   }
 }

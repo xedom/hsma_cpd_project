@@ -18,6 +18,15 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
   int _selectedIndex = 0;
   List<Map<String, dynamic>> pages = [];
 
+  @override
+  void initState() {
+    super.initState();
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    if (authProvider.isLoggedIn) {
+      authProvider.fetchCoins();
+    }
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -56,30 +65,32 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
             : null,
         title: const SizedBox.shrink(),
         actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: MouseRegion(
-              cursor: SystemMouseCursors.click,
-              child: GestureDetector(
-                onTap: () => GoRouter.of(context).go('/coins'),
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    color: Colors.white.withOpacity(0.2),
-                  ),
-                  child: const Row(
-                    children: [
-                      Text('100', style: TextStyle(color: Colors.white)),
-                      SizedBox(width: 5),
-                      Icon(Icons.paid, color: Colors.white),
-                    ],
+          if (authProvider.isLoggedIn)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: () => GoRouter.of(context).go('/coins'),
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      color: Colors.white.withOpacity(0.2),
+                    ),
+                    child: Row(
+                      children: [
+                        Text('${authProvider.coins}',
+                            style: const TextStyle(color: Colors.white)),
+                        const SizedBox(width: 5),
+                        const Icon(Icons.paid, color: Colors.white),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
         ],
       ),
       body: widget.child,

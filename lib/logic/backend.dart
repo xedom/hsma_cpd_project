@@ -3,6 +3,7 @@ import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 
 class BackendService {
   final Map<String, String> _users = {'pedro': '1234', 'john': 'password'};
+  final Map<String, int> _userCoins = {'pedro': 100, 'john': 50};
 
   final String _jwtSecret = 'secret-123456789';
 
@@ -38,6 +39,7 @@ class BackendService {
     }
 
     _users[username] = password;
+    _userCoins[username] = 100;
     return true;
   }
 
@@ -62,5 +64,14 @@ class BackendService {
     } catch (e) {
       return false;
     }
+  }
+
+  Future<int> getCoins(String username) async {
+    await _simulateNetworkDelay();
+
+    if (_userCoins.containsKey(username)) {
+      return _userCoins[username]!;
+    }
+    return 0;
   }
 }
