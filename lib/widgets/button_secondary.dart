@@ -5,12 +5,12 @@ class SecondaryButton extends StatelessWidget {
   const SecondaryButton({
     super.key,
     required this.text,
-    required this.image,
+    this.image,
     required this.onPressed,
   });
 
   final String text;
-  final String image;
+  final String? image;
   final VoidCallback onPressed;
 
   @override
@@ -34,7 +34,9 @@ class SecondaryButton extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            icon: ImageIcon(AssetImage(image), color: Colors.white),
+            icon: image != null
+                ? ImageIcon(AssetImage(image!), color: Colors.white)
+                : const SizedBox.shrink(),
             label: Text(
               text,
               style: const TextStyle(color: Colors.white, fontSize: 16),

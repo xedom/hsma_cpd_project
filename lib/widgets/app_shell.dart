@@ -45,13 +45,15 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
       appBar: AppBar(
         backgroundColor: AppColors.primary,
         elevation: 0,
-        leading: const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: AvatarWithFallback(
-            imageUrl: 'https://xed.im/img/pingu.jpg',
-            radius: 30,
-          ),
-        ),
+        leading: authProvider.isLoggedIn
+            ? const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: AvatarWithFallback(
+                  imageUrl: 'https://xed.im/img/pingu.jpg',
+                  radius: 30,
+                ),
+              )
+            : null,
         title: const SizedBox.shrink(),
         actions: [
           Padding(
@@ -108,10 +110,7 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
             selectedItemColor: Colors.white,
             unselectedItemColor: AppColors.primaryLight,
             onTap: (index) {
-              if (pages[index]['path'] == '/login' && authProvider.isLoggedIn) {
-                authProvider.logout();
-                GoRouter.of(context).go('/login');
-              } else if (pages[index]['path'] == '/profile' &&
+              if (pages[index]['path'] == '/profile' &&
                   !authProvider.isLoggedIn) {
                 GoRouter.of(context).go('/login');
               } else {

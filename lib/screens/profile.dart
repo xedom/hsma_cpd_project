@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hsma_cpd_project/widgets/avatar.dart';
 import 'package:hsma_cpd_project/widgets/button_primary.dart';
+import 'package:hsma_cpd_project/widgets/button_secondary.dart';
 import 'package:hsma_cpd_project/widgets/field_input.dart';
 import 'package:provider/provider.dart';
 import 'package:hsma_cpd_project/providers/auth.dart';
@@ -21,6 +22,12 @@ class ProfilePage extends StatelessWidget {
     void logout() {
       authProvider.logout();
       GoRouter.of(context).go('/login');
+    }
+
+    void saveSettings() {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Settings saved successfully!')),
+      );
     }
 
     return Scaffold(
@@ -74,7 +81,9 @@ class ProfilePage extends StatelessWidget {
                   icon: Icons.lock,
                 ),
                 const SizedBox(height: 30),
-                PrimaryButton(text: "Logout", onPressed: logout),
+                PrimaryButton(text: "Save", onPressed: saveSettings),
+                const SizedBox(height: 10),
+                SecondaryButton(text: "Logout", onPressed: logout),
               ],
             ),
           ),
