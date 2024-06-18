@@ -31,15 +31,15 @@ class GameHiLoPageState extends State<GameHiLoPage> {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     String? token = authProvider.token;
 
-    if (isJoker != null && isJoker) {
-      await _logic.guessJoker(bet);
-    } else if (isNumber != null) {
-      await _logic.guessNumberOrFigure(isNumber, bet);
-    } else if (isRed != null) {
-      await _logic.guessColor(isRed, bet);
-    } else {
-      await _logic.guess(isHigher, bet);
-    }
+    // if (isJoker != null && isJoker) {
+    //   await _logic.guessJoker(bet);
+    // } else if (isNumber != null) {
+    //   await _logic.guessNumberOrFigure(isNumber, bet);
+    // } else if (isRed != null) {
+    //   await _logic.guessColor(isRed, bet);
+    // } else {
+    //   await _logic.guess(isHigher, bet);
+    // }
 
     _updateState();
   }
