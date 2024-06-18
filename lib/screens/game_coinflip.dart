@@ -4,7 +4,7 @@ import 'package:hsma_cpd_project/widgets/button_custom.dart';
 import 'package:hsma_cpd_project/widgets/field_input.dart';
 
 class GameCoinFlipPage extends StatefulWidget {
-  const GameCoinFlipPage({super.key});
+  const GameCoinFlipPage({Key? key}) : super(key: key);
 
   @override
   GameCoinFlipPageState createState() => GameCoinFlipPageState();
@@ -43,9 +43,15 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
   }
 
   void _flipCoin() {
-    setState(() {
-      double bet = double.tryParse(_betController.text) ?? 0;
+    final bet = double.tryParse(_betController.text);
+    if (bet == null || bet <= 0) {
+      setState(() {
+        _message = 'Please enter a valid bet amount.';
+      });
+      return;
+    }
 
+    setState(() {
       _isHeads = Random().nextBool();
       _coinResult = _isHeads ? 'Heads' : 'Tails';
 
@@ -75,7 +81,6 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
         final transform = Matrix4.identity()
           ..setEntry(3, 2, 0.001)
           ..rotateY(angle);
-        // final showBack = (angle % (2 * pi)) > pi;
         final showBack = (angle + pi * 0.5 % (2 * pi)) > pi;
 
         return Transform(
