@@ -76,7 +76,6 @@ class RegisterScreenState extends State<RegisterScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 80),
                   const Text(
                     'CREATE A NEW ACCOUNT',
                     style: TextStyle(
@@ -85,21 +84,21 @@ class RegisterScreenState extends State<RegisterScreen> {
                       color: Colors.white,
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
                   FieldInput(
                     hint: "Username",
                     controller: usernameController,
                     autofocus: true,
                     icon: Icons.email,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   FieldInput(
                     hint: "Password",
                     controller: passwordController,
                     obscureText: true,
                     icon: Icons.lock,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   FieldInput(
                     hint: "Confirm Password",
                     controller: confirmPasswordController,
@@ -108,7 +107,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: 20),
                   PrimaryButton(text: 'REGISTER', onPressed: submit),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

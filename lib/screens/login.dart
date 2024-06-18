@@ -66,23 +66,24 @@ class LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 80),
-                  const Text(
-                    'LOGIN TO YOUR ACCOUNT',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                  const Center(
+                    child: Text(
+                      'LOGIN TO YOUR ACCOUNT',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
                   FieldInput(
                     hint: "Username",
                     controller: usernameController,
                     autofocus: true,
                     icon: Icons.email,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   FieldInput(
                     hint: "Password",
                     controller: passwordController,
@@ -91,7 +92,7 @@ class LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 20),
                   PrimaryButton(text: 'LOGIN', onPressed: submit),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

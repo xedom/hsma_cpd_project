@@ -62,7 +62,6 @@ class GameHiLoPageState extends State<GameHiLoPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 40),
               const Text(
                 'Current Card:',
                 style: TextStyle(
@@ -74,7 +73,7 @@ class GameHiLoPageState extends State<GameHiLoPage> {
               const SizedBox(height: 10),
               Image.asset('assets/cards/${_logic.currentCard}.png',
                   height: 300),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               Text(
                 _logic.message,
                 style: const TextStyle(
@@ -84,6 +83,7 @@ class GameHiLoPageState extends State<GameHiLoPage> {
                 ),
               ),
               const SizedBox(height: 20),
+              // --- user inputs ------------------------------
               FieldInput(
                 hint: 'Bet Amount',
                 controller: _betController,
