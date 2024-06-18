@@ -43,32 +43,47 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
   }
 
   void _flipCoin() {
-    final bet = double.tryParse(_betController.text);
-    if (bet == null || bet <= 0) {
+    // Überprüfen Sie, ob das Wettfeld leer ist
+    if (_betController.text.isEmpty) {
       setState(() {
-        _message = 'Please enter a valid bet amount.';
+        _message = 'Bitte geben Sie einen Wetteinsatz ein.';
       });
       return;
     }
 
-    setState(() {
-      _isHeads = Random().nextBool();
-      _coinResult = _isHeads ? 'Heads' : 'Tails';
+    // Überprüfen Sie, ob der Benutzer eine Seite ausgewählt hat
+    if (_userGuess.isEmpty) {
+      setState(() {
+        _message = 'Bitte wählen Sie eine Seite der Münze aus.';
+      });
+      return;
+    }
 
-      if (_userGuess == _coinResult) {
-        _message = 'You won ${bet * 2} coins!';
-      } else {
-        _message = 'You lost ${bet.toStringAsFixed(2)} coins!';
-      }
+    final bet = double.tryParse(_betController.text);
+    if (bet == null || bet <= 0) {
+      setState(() {
+        _message = 'Bitte geben Sie einen gültigen Wetteinsatz ein.';
+      });
+      return;
+    }
 
-      _rotationCount = 1 + Random().nextInt(3);
-      _animationController?.duration =
-          Duration(seconds: 1 + Random().nextInt(3));
+    // Aktualisieren Sie _isHeads und _coinResult basierend auf dem Ergebnis von Random().nextBool()
+    _isHeads = Random().nextBool();
+    _coinResult = _isHeads ? 'Heads' : 'Tails';
 
-      _animationController?.forward().then((_) {
-        setState(() {
-          _showFront = !_showFront;
-        });
+    // Vergleichen Sie _userGuess und _coinResult, um zu bestimmen, ob der Benutzer gewonnen oder verloren hat
+    if (_userGuess == _coinResult) {
+        _message = 'Sie haben ${bet * 2} Münzen gewonnen!';
+    } else {
+        _message = 'Sie haben ${bet.toStringAsFixed(2)} Münzen verloren!';
+    }
+
+    // Führen Sie die Münzwurfanimation aus
+    _rotationCount = 1 + Random().nextInt(3);
+    _animationController?.duration = Duration(seconds: 1 + Random().nextInt(3));
+    _animationController?.forward().then((_) {
+      setState(() {
+        _showFront = !_showFront;
       });
     });
   }
