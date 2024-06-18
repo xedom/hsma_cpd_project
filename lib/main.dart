@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hsma_cpd_project/screens/register.dart';
 import 'package:provider/provider.dart';
 import 'package:hsma_cpd_project/screens/game_coinflip.dart';
 import 'package:hsma_cpd_project/screens/coins.dart';
@@ -85,6 +86,11 @@ final GoRouter _router = GoRouter(
           name: 'login',
           path: '/login',
           builder: (context, state) => const LoginScreen(),
+        ),
+        GoRoute(
+          name: 'register',
+          path: '/register',
+          builder: (context, state) => const RegisterScreen(),
         ),
         GoRoute(
           name: 'profile',

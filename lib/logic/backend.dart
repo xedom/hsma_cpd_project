@@ -30,6 +30,17 @@ class BackendService {
     return null;
   }
 
+  Future<bool> register(String username, String password) async {
+    await _simulateNetworkDelay();
+
+    if (_users.containsKey(username)) {
+      return false;
+    }
+
+    _users[username] = password;
+    return true;
+  }
+
   Future<void> logout() async {
     await _simulateNetworkDelay();
     _currentUser = null;

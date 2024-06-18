@@ -20,6 +20,14 @@ class AuthProvider extends ChangeNotifier {
     return false;
   }
 
+  Future<bool> register(String username, String password) async {
+    bool success = await _backendService.register(username, password);
+    if (success) {
+      return await login(username, password);
+    }
+    return false;
+  }
+
   Future<void> logout() async {
     await _backendService.logout();
     _isLoggedIn = false;
