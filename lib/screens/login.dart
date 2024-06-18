@@ -18,13 +18,17 @@ class LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
 
   Future<void> submit() async {
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Logging in...')),
+    );
+
     bool success =
         await Provider.of<AuthProvider>(context, listen: false).login(
       usernameController.text,
       passwordController.text,
     );
-
-    if (!mounted) return;
 
     if (success) {
       GoRouter.of(context).go('/profile');

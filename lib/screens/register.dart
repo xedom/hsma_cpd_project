@@ -27,13 +27,17 @@ class RegisterScreenState extends State<RegisterScreen> {
       return;
     }
 
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Registering...')),
+    );
+
+    if (!mounted) return;
+
     bool success =
         await Provider.of<AuthProvider>(context, listen: false).register(
       usernameController.text,
       passwordController.text,
     );
-
-    if (!mounted) return;
 
     if (success) {
       GoRouter.of(context).go('/profile');

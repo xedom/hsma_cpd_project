@@ -3,12 +3,26 @@ import 'package:go_router/go_router.dart';
 import 'package:hsma_cpd_project/widgets/avatar.dart';
 import 'package:hsma_cpd_project/widgets/button_primary.dart';
 import 'package:hsma_cpd_project/widgets/field_input.dart';
+import 'package:provider/provider.dart';
+import 'package:hsma_cpd_project/providers/auth.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final TextEditingController usernameController =
+        TextEditingController(text: authProvider.currentUser);
+    final TextEditingController newPasswordController = TextEditingController();
+    final TextEditingController confirmPasswordController =
+        TextEditingController();
+
+    void logout() {
+      authProvider.logout();
+      GoRouter.of(context).go('/login');
+    }
+
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -30,10 +44,10 @@ class ProfilePage extends StatelessWidget {
                   imageUrl: 'https://xed.im/img/pingu.jpg',
                   radius: 50,
                 ),
-                const SizedBox(height: 30),
-                const Text(
-                  'Username: Pedro Pè',
-                  style: TextStyle(
+                const SizedBox(height: 10),
+                Text(
+                  'Username: ${authProvider.currentUser}',
+                  style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -41,29 +55,26 @@ class ProfilePage extends StatelessWidget {
                 ),
                 const SizedBox(height: 30),
                 FieldInput(
-                  hint: 'TODO: add current user name',
-                  controller: TextEditingController(),
+                  hint: 'Update Username',
+                  controller: usernameController,
                   icon: Icons.person,
                 ),
                 const SizedBox(height: 10),
                 FieldInput(
                   hint: 'New Password',
-                  controller: TextEditingController(),
+                  controller: newPasswordController,
                   obscureText: true,
                   icon: Icons.lock,
                 ),
                 const SizedBox(height: 10),
                 FieldInput(
                   hint: 'Confirm Password',
-                  controller: TextEditingController(),
+                  controller: confirmPasswordController,
                   obscureText: true,
                   icon: Icons.lock,
                 ),
                 const SizedBox(height: 30),
-                PrimaryButton(
-                  text: "Logout",
-                  onPressed: () => GoRouter.of(context).go('/logout'),
-                ),
+                PrimaryButton(text: "Logout", onPressed: logout),
               ],
             ),
           ),
