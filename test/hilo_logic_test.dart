@@ -26,15 +26,15 @@ void main() {
 
     test('initialize fetches the current card', () async {
       when(() => backendService.getHiLoCurrentCard())
-          .thenAnswer((_) async => '5_hearts');
+          .thenAnswer((_) async => 'hearts_5');
 
       await logic.initialize();
 
-      expect(logic.currentCard, equals('5_hearts'));
+      expect(logic.currentCard, equals('hearts_5'));
     });
 
     test('getBetMultiplier returns correct multipliers', () {
-      logic.currentCard = '5_hearts'; // Corrected card notation
+      logic.currentCard = 'hearts_5'; // Corrected card notation
       expect(logic.getBetMultiplier(GuessType.joker), equals('25x'));
       expect(logic.getBetMultiplier(GuessType.number), equals('1.5x'));
       expect(logic.getBetMultiplier(GuessType.figure), equals('3x'));
@@ -47,10 +47,10 @@ void main() {
 
     test('guess updates the game state correctly when guess is correct',
         () async {
-      logic.currentCard = '5_hearts';
+      logic.currentCard = 'hearts_5';
       when(() => backendService.submitHiLoGuess(any(), any(), any()))
           .thenAnswer((_) async => {
-                'nextCard': '6_hearts',
+                'nextCard': 'hearts_6',
                 'success': true,
                 'winnings': 100,
                 'coins': 500,
@@ -61,18 +61,18 @@ void main() {
 
       await logic.guess(GuessType.higher, 50);
 
-      expect(logic.currentCard, equals('6_hearts'));
+      expect(logic.currentCard, equals('hearts_6'));
       expect(logic.message, equals('Correct! You won 100 coins.'));
-      expect(logic.previousCards.last, equals('5_hearts'));
+      expect(logic.previousCards.last, equals('hearts_5'));
       verify(() => authProvider.updateCoins(500)).called(1);
     });
 
     test('guess updates the game state correctly when guess is incorrect',
         () async {
-      logic.currentCard = '5_hearts';
+      logic.currentCard = 'hearts_5';
       when(() => backendService.submitHiLoGuess(any(), any(), any()))
           .thenAnswer((_) async => {
-                'nextCard': '4_hearts',
+                'nextCard': 'hearts_4',
                 'success': false,
                 'winnings': 0,
                 'coins': 450,
@@ -83,9 +83,9 @@ void main() {
 
       await logic.guess(GuessType.higher, 50);
 
-      expect(logic.currentCard, equals('4_hearts'));
+      expect(logic.currentCard, equals('hearts_4'));
       expect(logic.message, equals('Wrong! You lost 50 coins.'));
-      expect(logic.previousCards.last, equals('5_hearts'));
+      expect(logic.previousCards.last, equals('hearts_5'));
       verify(() => authProvider.updateCoins(450)).called(1);
     });
   });

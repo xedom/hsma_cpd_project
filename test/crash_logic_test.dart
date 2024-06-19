@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:hsma_cpd_project/logic/crash_logic.dart';
@@ -27,10 +26,18 @@ void main() {
       gameCrashLogic.dispose();
     });
 
-    test('startGame with valid guess and bet should update rocketValue and gameRunning', () async {
+    test(
+        'startGame with valid guess and bet should update rocketValue and gameRunning',
+        () async {
       // Mocking the backend service response
-      when(mockBackendService.submitCrashGuess(any, any, any))
-          .thenAnswer((_) async => {'crashPoint': 2.5, 'coins': 100});
+      when(mockBackendService.submitCrashGuess('user', 2, 10))
+          .thenAnswer((_) async => {
+                'crashPoint': 2.5,
+                'coins': 120,
+                'success': true,
+                'winnings': 20,
+                'message': 'You won 20 coins! The crash point was 2.5.',
+              });
 
       // Setting up controllers with mock values
       gameCrashLogic.guessController.text = '2';
@@ -44,7 +51,7 @@ void main() {
 
       // Check that rocketValue has been updated
       expect(gameCrashLogic.rocketValue, greaterThan(0));
-      
+
       // Check that gameRunning is false after the game is finished
       expect(gameCrashLogic.gameRunning, false);
 
@@ -58,7 +65,5 @@ void main() {
       // Verify that updateCoins method of AuthProvider was called with correct coins
       verify(mockAuthProvider.updateCoins(100)).called(1);
     });
-
-   
   });
 }

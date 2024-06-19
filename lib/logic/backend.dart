@@ -33,6 +33,9 @@ class BackendService {
 
       _currentToken = jwt.sign(SecretKey(_jwtSecret));
       return _currentToken;
+    } else {
+      _currentUser = null;
+      _currentToken = null;
     }
     return null;
   }
