@@ -1,10 +1,10 @@
-import 'dart:async';
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:hsma_cpd_project/constants.dart';
+import 'package:hsma_cpd_project/logic/crash_logic.dart';
 import 'package:hsma_cpd_project/widgets/button_custom.dart';
 import 'package:hsma_cpd_project/widgets/field_input.dart';
+import 'package:provider/provider.dart';
 
 class GameCrashPage extends StatefulWidget {
   const GameCrashPage({super.key});
@@ -14,159 +14,131 @@ class GameCrashPage extends StatefulWidget {
 }
 
 class GameCrashPageState extends State<GameCrashPage> {
-  final TextEditingController _guessController = TextEditingController();
-  final TextEditingController _betController = TextEditingController();
-  double _rocketValue = 0;
-  bool _gameRunning = false;
-  Timer? _timer;
-  double _stopValue = 0;
-  String _message = '';
-  List<Offset> _rocketPath = [const Offset(0, 0)];
-  double _guess = 0;
-  double _bet = 0;
+  late GameCrashLogic logic;
 
-  void _startGame() {
-    setState(() {
-      _rocketValue = 0;
-      _rocketPath = [const Offset(0, 0)];
-      _gameRunning = true;
-
-      _stopValue = _generateGeometric(0.7);
-
-      _message = '';
-      _guess = double.tryParse(_guessController.text) ?? 0;
-      _bet = double.tryParse(_betController.text) ?? 0;
-    });
-
-    _timer = Timer.periodic(const Duration(milliseconds: 1), (timer) {
-      setState(() {
-        _rocketValue += 0.01;
-
-        if (_rocketPath.length > 52) _rocketPath.removeAt(0);
-        _rocketPath.add(Offset(
-          _rocketValue * 4,
-          _rocketValue * _rocketValue * 0.05,
-        ));
-        if (_rocketValue >= _stopValue) {
-          _timer?.cancel();
-          _gameRunning = false;
-          _checkResult();
-        }
-      });
-    });
-  }
-
-  double _generateGeometric(double p) {
-    double u = Random().nextDouble();
-    return (log(u) / log(1 - p));
-  }
-
-  void _checkResult() {
-    if (_rocketValue >= _guess) {
-      double winnings = _bet * _guess;
-      setState(() {
-        _message = 'You won ${winnings.toStringAsFixed(2)} coins!';
-      });
-    } else {
-      setState(() {
-        _message = 'You lost ${_bet.toStringAsFixed(2)} coins!';
-      });
-    }
+  @override
+  void initState() {
+    super.initState();
+    logic = GameCrashLogic();
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
-    _guessController.dispose();
-    _betController.dispose();
+    logic.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)],
+    return ChangeNotifierProvider.value(
+      value: logic,
+      child: Scaffold(
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)],
+            ),
           ),
-        ),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Stack(
-                children: [
-                  CustomPaint(
-                    size:
-                        Size(min(MediaQuery.of(context).size.width, 500), 300),
-                    painter: RocketPathPainter(_rocketPath),
-                  ),
-                  if (_rocketPath.isNotEmpty)
-                    Positioned(
-                      left: _rocketPath.last.dx * 10,
-                      top: 300 - (_rocketPath.last.dy * 10) - 60,
-                      child: Column(
-                        children: [
-                          Text(
-                            'x${_rocketValue.toStringAsFixed(2)}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Stack(
+                  children: [
+                    Consumer<GameCrashLogic>(
+                      builder: (context, logic, _) {
+                        return CustomPaint(
+                          size: Size(
+                              min(MediaQuery.of(context).size.width, 500), 300),
+                          painter: RocketPathPainter(logic.rocketPath),
+                        );
+                      },
+                    ),
+                    Consumer<GameCrashLogic>(
+                      builder: (context, logic, _) {
+                        if (logic.rocketPath.isNotEmpty) {
+                          return Positioned(
+                            left: logic.rocketPath.last.dx * 10,
+                            top: 300 - (logic.rocketPath.last.dy * 10) - 60,
+                            child: Column(
+                              children: [
+                                Text(
+                                  'x${logic.rocketValue.toStringAsFixed(2)}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Image.asset('assets/rocket.png',
+                                    width: 50, height: 50),
+                              ],
                             ),
-                          ),
-                          Image.asset('assets/rocket.png',
-                              width: 50, height: 50),
-                        ],
-                      ),
+                          );
+                        } else {
+                          return Container();
+                        }
+                      },
                     ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Text(
-                _message,
-                style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                'Rocket x${_rocketValue.toStringAsFixed(2)}',
-                style: const TextStyle(fontSize: 24, color: Colors.white),
-              ),
-              const SizedBox(height: 20),
-              FieldInput(
-                hint: 'Your Guess (e.g., x1.56)',
-                controller: _guessController,
-                icon: Icons.rocket_launch,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
-              ),
-              const SizedBox(height: 10),
-              FieldInput(
-                hint: 'Bet Amount',
-                controller: _betController,
-                icon: Icons.attach_money,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
-              ),
-              const SizedBox(height: 20),
-              _gameRunning
-                  ? CustomButton(
-                      label: 'Game Running...',
-                      onPressed: () {},
-                    )
-                  : CustomButton(
-                      label: 'Start Game',
-                      onPressed: _startGame,
-                    ),
-            ],
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Consumer<GameCrashLogic>(
+                  builder: (context, logic, _) {
+                    return Text(
+                      logic.message,
+                      style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    );
+                  },
+                ),
+                const SizedBox(height: 10),
+                Consumer<GameCrashLogic>(
+                  builder: (context, logic, _) {
+                    return Text(
+                      'Rocket x${logic.rocketValue.toStringAsFixed(2)}',
+                      style: const TextStyle(fontSize: 24, color: Colors.white),
+                    );
+                  },
+                ),
+                const SizedBox(height: 20),
+                FieldInput(
+                  hint: 'Your Guess (e.g., x1.56)',
+                  controller: logic.guessController,
+                  icon: Icons.rocket_launch,
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                ),
+                const SizedBox(height: 10),
+                FieldInput(
+                  hint: 'Bet Amount',
+                  controller: logic.betController,
+                  icon: Icons.attach_money,
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                ),
+                const SizedBox(height: 20),
+                Consumer<GameCrashLogic>(
+                  builder: (context, logic, _) {
+                    return logic.gameRunning
+                        ? CustomButton(
+                            label: 'Game Running...',
+                            onPressed: () {},
+                          )
+                        : CustomButton(
+                            label: 'Start Game',
+                            onPressed: logic.startGame,
+                          );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

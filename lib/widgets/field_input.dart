@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:hsma_cpd_project/constants.dart';
 
 class FieldInput extends StatelessWidget {
   const FieldInput({

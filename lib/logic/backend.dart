@@ -4,13 +4,11 @@ import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:hsma_cpd_project/constants.dart' as constants;
 import 'package:hsma_cpd_project/logic/hilo_logic.dart' as hilo_logic;
 import 'package:hsma_cpd_project/logic/roulette_logic.dart' as roulette_logic;
-import 'package:hsma_cpd_project/screens/game_coinflip.dart' as game_coinflip;
-
-// enum GuessType { higher, lower, joker, number, figure, red, black }
+import 'package:hsma_cpd_project/logic/coinflip_logic.dart' as game_coinflip;
 
 class BackendService {
-  final Map<String, String> _users = {'pedro': '1234', 'john': 'password'};
-  final Map<String, int> _userCoins = {'pedro': 100, 'john': 50};
+  final Map<String, String> _users = {'user': '1234', 'user2': 'user2'};
+  final Map<String, int> _userCoins = {'user': 100, 'user2': 500};
 
   final String _jwtSecret = 'secret-123456789';
 
