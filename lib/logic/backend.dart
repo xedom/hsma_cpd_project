@@ -239,7 +239,7 @@ class BackendService {
   int _getWinnings(GuessType guessType, int bet) {
     switch (guessType) {
       case GuessType.joker:
-        return bet * 10;
+        return bet * 25;
 
       case GuessType.number:
         return (bet * 1.5).round();

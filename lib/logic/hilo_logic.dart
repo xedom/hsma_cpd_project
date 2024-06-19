@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:hsma_cpd_project/logic/backend.dart';
 
 enum GuessType { higher, lower, joker, number, figure, red, black }
@@ -69,11 +68,9 @@ class HiLoLogic {
   List<String> previousCards = [];
   int coins = 100;
 
-  HiLoLogic(this._backendService) {
-    _initialize();
-  }
+  HiLoLogic(this._backendService);
 
-  Future<void> _initialize() async {
+  Future<void> initialize() async {
     currentCard = await _backendService.getHiLoCurrentCard();
   }
 
@@ -116,42 +113,28 @@ class HiLoLogic {
   String getBetMultiplier(GuessType guessType) {
     switch (guessType) {
       case GuessType.joker:
-        return '10x';
-
+        return '25x';
       case GuessType.number:
         return '1.5x';
-
       case GuessType.figure:
         return '3x';
-
       case GuessType.red:
       case GuessType.black:
         return '2x';
-
       case GuessType.higher:
-        {
-          int currentCardValue = getCardValue(currentCard);
-          double probability = deck
-                  .where((card) => getCardValue(card) >= currentCardValue)
-                  .length /
-              deck.length;
-          double multiplier =
-              double.parse((1 / probability).toStringAsFixed(2));
-          return '${multiplier}x';
-        }
-
       case GuessType.lower:
-        {
-          int currentCardValue = getCardValue(currentCard);
-          double probability = deck
-                  .where((card) => getCardValue(card) <= currentCardValue)
-                  .length /
-              deck.length;
-          double multiplier =
-              double.parse((1 / probability).toStringAsFixed(2));
-          return '${multiplier}x';
-        }
-
+        int currentCardValue = getCardValue(currentCard);
+        double probability = guessType == GuessType.higher
+            ? deck
+                    .where((card) => getCardValue(card) >= currentCardValue)
+                    .length /
+                deck.length
+            : deck
+                    .where((card) => getCardValue(card) <= currentCardValue)
+                    .length /
+                deck.length;
+        double multiplier = double.parse((1 / probability).toStringAsFixed(2));
+        return '${multiplier}x';
       default:
         return '2x';
     }
@@ -195,7 +178,7 @@ class HiLoLogic {
     if (correctGuess) {
       score++;
       coins += _getWinnings(guessType, bet);
-      message = 'Correct! You won $bet coins.';
+      message = 'Correct! You won ${_getWinnings(guessType, bet)} coins.';
     } else {
       score = 0;
       message = 'Wrong! You lost $bet coins.';
@@ -211,6 +194,27 @@ class HiLoLogic {
     switch (guessType) {
       case GuessType.joker:
         return bet * 10;
+      case GuessType.number:
+        return (bet * 1.5).round();
+      case GuessType.figure:
+        return bet * 3;
+      case GuessType.red:
+      case GuessType.black:
+        return bet * 2;
+      case GuessType.higher:
+        int currentCardValue = getCardValue(currentCard);
+        double probability =
+            deck.where((card) => getCardValue(card) > currentCardValue).length /
+                deck.length;
+        double multiplier = double.parse((1 / probability).toStringAsFixed(2));
+        return (bet * multiplier).round();
+      case GuessType.lower:
+        int currentCardValue = getCardValue(currentCard);
+        double probability =
+            deck.where((card) => getCardValue(card) < currentCardValue).length /
+                deck.length;
+        double multiplier = double.parse((1 / probability).toStringAsFixed(2));
+        return (bet * multiplier).round();
       default:
         return bet * 2;
     }

@@ -143,9 +143,8 @@ class GameCrashPageState extends State<GameCrashPage> {
                   ),
                   if (_rocketPath.isNotEmpty)
                     Positioned(
-                      left: _rocketPath.last.x * 20, // Adjust position scaling
-                      top: 300 -
-                          (_rocketPath.last.y * 10), // Adjust position scaling
+                      left: _rocketPath.last.x * 20,
+                      top: 300 - (_rocketPath.last.y * 10),
                       child: Image.asset(
                         'assets/rocket.png',
                         width: 50,

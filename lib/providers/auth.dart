@@ -18,7 +18,7 @@ class AuthProvider extends ChangeNotifier {
     if (token != null) {
       _isLoggedIn = true;
       _token = token;
-      _coins = await _backendService.getCoins(username); // Fetch coins
+      _coins = await _backendService.getCoins(username);
       notifyListeners();
       return true;
     }
