@@ -18,11 +18,22 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
   int _selectedIndex = 0;
   List<Map<String, dynamic>> pages = [];
 
+  @override
+  void initState() {
+    super.initState();
+    final currentLocation =
+        GoRouter.of(context).routerDelegate.currentConfiguration.fullPath;
+    _selectedIndex = _getPageIndexFromPath(currentLocation);
+  }
+
+  int _getPageIndexFromPath(String path) {
+    return pages.indexWhere((page) => page['path'] == path);
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
-
     GoRouter.of(context).go(pages[index]['path']!);
   }
 
@@ -40,6 +51,9 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
       else
         {'name': 'Login', 'path': '/login', 'icon': Icons.login},
     ];
+
+    _selectedIndex = _getPageIndexFromPath(
+        GoRouter.of(context).routerDelegate.currentConfiguration.fullPath);
 
     return Scaffold(
       appBar: AppBar(

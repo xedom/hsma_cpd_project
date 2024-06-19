@@ -50,7 +50,6 @@ class MyApp extends StatelessWidget {
 
 final GoRouter router = GoRouter(
   initialLocation: '/login',
-  // refreshListenable: auth,
   redirect: (context, state) {
     final auth = Provider.of<AuthProvider>(context, listen: false);
     final loggedIn = auth.isLoggedIn;

@@ -174,7 +174,6 @@ class RocketPathPainter extends CustomPainter {
     }
     canvas.drawPath(path, paint);
 
-    // Draw the border lines
     final borderPaint = Paint()
       ..color = AppColors.primary
       ..strokeWidth = 4
