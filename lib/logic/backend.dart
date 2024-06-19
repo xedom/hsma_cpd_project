@@ -4,7 +4,7 @@ import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:hsma_cpd_project/constants.dart' as constants;
 import 'package:hsma_cpd_project/logic/hilo_logic.dart' as hilo_logic;
 import 'package:hsma_cpd_project/logic/roulette_logic.dart' as roulette_logic;
-import 'package:hsma_cpd_project/screens/game_coinflip.dart' as game_coinflip;
+import 'package:hsma_cpd_project/logic/coinflip_logic.dart' as game_coinflip;
 
 // enum GuessType { higher, lower, joker, number, figure, red, black }
 
