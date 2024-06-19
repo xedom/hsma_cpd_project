@@ -5,11 +5,12 @@ import 'package:hsma_cpd_project/providers/auth.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockBackendService extends Mock implements BackendService {}
+
 class MockAuthProvider extends Mock implements AuthProvider {}
 
 void main() {
   setUpAll(() {
-    registerFallbackValue<GuessType>(GuessType.higher); // oder ein anderer gültiger Wert für GuessType
+    registerFallbackValue(GuessType.higher); // No type argument needed
   });
 
   group('HiLoLogic', () {
@@ -24,33 +25,36 @@ void main() {
     });
 
     test('initialize fetches the current card', () async {
-      when(() => backendService.getHiLoCurrentCard()).thenAnswer((_) async => '5_hearts');
+      when(() => backendService.getHiLoCurrentCard())
+          .thenAnswer((_) async => '5_hearts');
 
       await logic.initialize();
 
       expect(logic.currentCard, equals('5_hearts'));
     });
 
-  test('getBetMultiplier returns correct multipliers', () {
-  logic.currentCard = '5_of_hearts'; // Korrigierte Kartenbezeichnung
-  expect(logic.getBetMultiplier(GuessType.joker), equals('25x'));
-  expect(logic.getBetMultiplier(GuessType.number), equals('1.5x'));
-  expect(logic.getBetMultiplier(GuessType.figure), equals('3x'));
-  expect(logic.getBetMultiplier(GuessType.red), equals('2x'));
-  expect(logic.getBetMultiplier(GuessType.black), equals('2x'));
-  // Hinzufügen von Assertions für higher und lower
-  expect(logic.getBetMultiplier(GuessType.higher), isNotEmpty);
-  expect(logic.getBetMultiplier(GuessType.lower), isNotEmpty);
-});
+    test('getBetMultiplier returns correct multipliers', () {
+      logic.currentCard = '5_hearts'; // Corrected card notation
+      expect(logic.getBetMultiplier(GuessType.joker), equals('25x'));
+      expect(logic.getBetMultiplier(GuessType.number), equals('1.5x'));
+      expect(logic.getBetMultiplier(GuessType.figure), equals('3x'));
+      expect(logic.getBetMultiplier(GuessType.red), equals('2x'));
+      expect(logic.getBetMultiplier(GuessType.black), equals('2x'));
+      // Adding assertions for higher and lower
+      expect(logic.getBetMultiplier(GuessType.higher), isNotEmpty);
+      expect(logic.getBetMultiplier(GuessType.lower), isNotEmpty);
+    });
 
-    test('guess updates the game state correctly when guess is correct', () async {
+    test('guess updates the game state correctly when guess is correct',
+        () async {
       logic.currentCard = '5_hearts';
-      when(() => backendService.submitHiLoGuess(any(), any(), any())).thenAnswer((_) async => {
-        'nextCard': '6_hearts',
-        'success': true,
-        'winnings': 100,
-        'coins': 500,
-      });
+      when(() => backendService.submitHiLoGuess(any(), any(), any()))
+          .thenAnswer((_) async => {
+                'nextCard': '6_hearts',
+                'success': true,
+                'winnings': 100,
+                'coins': 500,
+              });
 
       when(() => authProvider.currentUser).thenReturn('testUser');
       when(() => authProvider.updateCoins(any())).thenReturn(null);
@@ -63,14 +67,16 @@ void main() {
       verify(() => authProvider.updateCoins(500)).called(1);
     });
 
-    test('guess updates the game state correctly when guess is incorrect', () async {
+    test('guess updates the game state correctly when guess is incorrect',
+        () async {
       logic.currentCard = '5_hearts';
-      when(() => backendService.submitHiLoGuess(any(), any(), any())).thenAnswer((_) async => {
-        'nextCard': '4_hearts',
-        'success': false,
-        'winnings': 0,
-        'coins': 450,
-      });
+      when(() => backendService.submitHiLoGuess(any(), any(), any()))
+          .thenAnswer((_) async => {
+                'nextCard': '4_hearts',
+                'success': false,
+                'winnings': 0,
+                'coins': 450,
+              });
 
       when(() => authProvider.currentUser).thenReturn('testUser');
       when(() => authProvider.updateCoins(any())).thenReturn(null);
@@ -82,7 +88,5 @@ void main() {
       expect(logic.previousCards.last, equals('5_hearts'));
       verify(() => authProvider.updateCoins(450)).called(1);
     });
-
-    
   });
 }
