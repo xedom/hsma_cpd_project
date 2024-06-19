@@ -6,8 +6,8 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();  // Initialisiere die Flutter-Bindung
   group('RouletteLogic', () {
     test('startRoulette sets up the animation correctly', () {
-      final rouletteLogic = RouletteLogic(TestVSync());
-      final randomNumber = 5;
+      final rouletteLogic = RouletteLogic(const TestVSync());
+      const randomNumber = 5;
 
       rouletteLogic.startRoulette(randomNumber);
 
@@ -17,8 +17,8 @@ void main() {
     });
 
     test('calculateCurrentAngle calculates the angle correctly', () {
-      final rouletteLogic = RouletteLogic(TestVSync());
-      final randomNumber = 5;
+      final rouletteLogic = RouletteLogic(const TestVSync());
+      const randomNumber = 5;
 
       rouletteLogic.startRoulette(randomNumber);
 

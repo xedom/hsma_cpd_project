@@ -19,7 +19,7 @@ void main() {
       // und wickel es in einen ChangeNotifierProvider für den AuthProvider
       final testWidget = ChangeNotifierProvider<AuthProvider>.value(
         value: mockAuthProvider,
-        child: MaterialApp(
+        child: const MaterialApp(
           home: CoinsPage(),
         ),
       );
@@ -31,15 +31,15 @@ void main() {
       expect(find.byType(CoinsPage), findsOneWidget);
 
       // Überprüfe, ob die Anzahl der CoinPacketCard Widgets mit der Anzahl der Münzpakete übereinstimmt
-      expect(find.byType(CoinPacketCard), findsNWidgets(CoinsPage().coinPackets.length));
+      expect(find.byType(CoinPacketCard), findsNWidgets(const CoinsPage().coinPackets.length));
 
       // Simuliere das Tippen auf jede CoinPacketCard
-      for (var i = 0; i < CoinsPage().coinPackets.length; i++) {
+      for (var i = 0; i < const CoinsPage().coinPackets.length; i++) {
         await tester.tap(find.byType(CoinPacketCard).at(i));
         await tester.pumpAndSettle();
 
         // Überprüfe, ob die addCoins Methode des AuthProviders aufgerufen wurde
-        verify(mockAuthProvider.addCoins(CoinsPage().coinPackets[i]['amount'] as int)).called(1);
+        verify(mockAuthProvider.addCoins(const CoinsPage().coinPackets[i]['amount'] as int)).called(1);
       }
     });
   });

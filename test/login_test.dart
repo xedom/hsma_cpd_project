@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 void main() {
   testWidgets('LoginScreen Test', (WidgetTester tester) async {
     // Erstelle den LoginScreen
-    await tester.pumpWidget(MaterialApp(home: LoginScreen()));
+    await tester.pumpWidget(const MaterialApp(home: LoginScreen()));
 
     // Überprüfe, ob der Text 'LOGIN TO YOUR ACCOUNT' gefunden wird
     expect(find.text('LOGIN TO YOUR ACCOUNT'), findsOneWidget);
