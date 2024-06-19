@@ -37,20 +37,17 @@ class GameRoulettePageState extends State<GameRoulettePage> {
     }
 
     final result = await RouletteLogic.guess(context, guess, bet);
-    print(result);
     final success = result['success'] as bool;
 
     setState(() {
       extractedNumber = (result['extractedNumber'] as (int, GuessType)).$1;
 
       if (success) {
-        message = 'You won ${result['winnings']} coins!';
+        message = 'You won ${result['winnings'] - bet} coins!';
       } else {
         message =
             'You lost $bet coins! The extracted number was $extractedNumber.';
       }
-      print(extractedNumber);
-      print(message);
     });
   }
 
