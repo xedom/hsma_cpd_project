@@ -21,9 +21,13 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
   @override
   void initState() {
     super.initState();
-    final currentLocation =
+    String currentLocation =
         GoRouter.of(context).routerDelegate.currentConfiguration.fullPath;
-    _selectedIndex = _getPageIndexFromPath(currentLocation);
+    if (currentLocation == '/register' || currentLocation == '/coins') {
+      _selectedIndex = 0;
+    } else {
+      _selectedIndex = _getPageIndexFromPath(currentLocation);
+    }
   }
 
   int _getPageIndexFromPath(String path) {
@@ -52,8 +56,15 @@ class BottomNavBarShellState extends State<BottomNavBarShell> {
         {'name': 'Login', 'path': '/login', 'icon': Icons.login},
     ];
 
-    _selectedIndex = _getPageIndexFromPath(
-        GoRouter.of(context).routerDelegate.currentConfiguration.fullPath);
+    String currentLocation =
+        GoRouter.of(context).routerDelegate.currentConfiguration.fullPath;
+    if (currentLocation == '/register' || currentLocation == '/coins') {
+      _selectedIndex = 0;
+    } else {
+      _selectedIndex = _getPageIndexFromPath(currentLocation);
+    }
+    // _selectedIndex = _getPageIndexFromPath(
+    //     GoRouter.of(context).routerDelegate.currentConfiguration.fullPath);
 
     return Scaffold(
       appBar: AppBar(
