@@ -30,16 +30,17 @@ class GameCrashPageState extends State<GameCrashPage> {
       _rocketValue = 0;
       _rocketPath = [const Offset(0, 0)];
       _gameRunning = true;
-      _stopValue = 0.5 + Random().nextDouble() * 19.0;
+
+      _stopValue = _generateGeometric(0.7);
 
       _message = '';
       _guess = double.tryParse(_guessController.text) ?? 0;
       _bet = double.tryParse(_betController.text) ?? 0;
     });
 
-    _timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
+    _timer = Timer.periodic(const Duration(milliseconds: 1), (timer) {
       setState(() {
-        _rocketValue += 0.1;
+        _rocketValue += 0.01;
 
         if (_rocketPath.length > 100) _rocketPath.removeAt(0);
         _rocketPath
@@ -51,6 +52,11 @@ class GameCrashPageState extends State<GameCrashPage> {
         }
       });
     });
+  }
+
+  double _generateGeometric(double p) {
+    double u = Random().nextDouble();
+    return (log(u) / log(1 - p));
   }
 
   void _checkResult() {
@@ -102,9 +108,7 @@ class GameCrashPageState extends State<GameCrashPage> {
                   if (_rocketPath.isNotEmpty)
                     Positioned(
                       left: _rocketPath.last.dx * 10,
-                      top: 300 -
-                          (_rocketPath.last.dy * 10) -
-                          60, // Adjust position for the label
+                      top: 300 - (_rocketPath.last.dy * 10) - 60,
                       child: Column(
                         children: [
                           Text(
@@ -182,11 +186,8 @@ class RocketPathPainter extends CustomPainter {
 
     final path = Path();
     if (rocketPath.isNotEmpty) {
-      // double stretchX = 10.0 / max(rocketPath.length, 110) * 110;
-      double stretchX = 10.0;
-      // double stretchY =
-      //     10.0 / max(rocketPath.last.dy - rocketPath.first.dy, 25) * 25;
-      double stretchY = 10.0;
+      double stretchX = 100.0;
+      double stretchY = 100.0;
 
       path.moveTo((rocketPath.first.dx - rocketPath.first.dx) * 10,
           size.height - ((rocketPath.first.dy - rocketPath.first.dy) * 10));
