@@ -1,19 +1,50 @@
-// import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-// import 'package:hsma_cpd_project/screens/game_hilo.dart';
+import 'package:hsma_cpd_project/screens/game_hilo.dart';
+import 'package:provider/provider.dart';
+import 'package:mockito/mockito.dart';
+import 'package:hsma_cpd_project/logic/backend.dart';
+import 'package:hsma_cpd_project/providers/auth.dart';
+
+// Mock BackendService for testing
+class MockBackendService extends Mock implements BackendService {}
+class MockAuthProvider extends Mock implements AuthProvider {}
 
 void main() {
-  testWidgets('GameHiLoPage test', (WidgetTester tester) async {
-    // await tester.pumpWidget(const MaterialApp(home: GameHiLoPage()));
+  group('GameHiLoPage Widget Tests', () {
+    // Test for checking if the page loads and shows the current card image
+    testWidgets('GameHiLoPage shows current card image when loaded', (WidgetTester tester) async {
+      // Create mock instances of BackendService and AuthProvider
+      final mockBackendService = MockBackendService();
+      final mockAuthProvider = MockAuthProvider();
 
-    // expect(find.text('Current Card:'), findsOneWidget);
-    // expect(find.text('Bet Amount'), findsOneWidget);
-    // expect(find.byType(TextField), findsOneWidget);
+      // Provide mock instances to the widget tree using ChangeNotifierProvider
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            Provider<BackendService>.value(value: mockBackendService),
+            ChangeNotifierProvider<AuthProvider>.value(value: mockAuthProvider),
+          ],
+          child: MaterialApp(
+            home: GameHiLoPage(),
+          ),
+        ),
+      );
 
-    // await tester.enterText(find.byType(TextField), '10');
-    // await tester.tap(find.text('Higher'));
-    // await tester.pump();
+      // Simulate initialization completion
+      when(mockBackendService.getHiLoCurrentCard()).thenAnswer((_) async => '2_club');
 
-    // expect(find.textContaining('Correct!'), findsOneWidget);
+      // Trigger initial build
+      await tester.pump();
+
+      // Wait for loading indicator to disappear
+      await tester.pumpAndSettle();
+
+      // Verify that the current card image is displayed
+      expect(find.text('Current Card:'), findsOneWidget);
+      expect(find.byWidgetPredicate((widget) => widget is Image && widget.image is AssetImage), findsOneWidget);
+    });
+
+    // Add more tests for interactions and state changes as needed
   });
 }
