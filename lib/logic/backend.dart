@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
-import 'package:hsma_cpd_project/constants.dart';
+import 'package:hsma_cpd_project/constants.dart' as constants;
 import 'package:hsma_cpd_project/logic/hilo_logic.dart' as hilo_logic;
+import 'package:hsma_cpd_project/logic/roulette_logic.dart' as roulette_logic;
 import 'package:hsma_cpd_project/screens/game_coinflip.dart' as game_coinflip;
 
 // enum GuessType { higher, lower, joker, number, figure, red, black }
@@ -16,7 +17,7 @@ class BackendService {
   String? _currentUser;
   String? _currentToken;
 
-  static const List<String> _deck = PokerDeckOfCards;
+  static const List<String> _deck = constants.pokerDeckOfCards;
 
   String? _lastCard;
 
@@ -103,9 +104,54 @@ class BackendService {
     return false;
   }
 
+  // Roulette Game
+  Future<Map<String, dynamic>> submitRouletteGuess(
+      String username, roulette_logic.GuessType guess, int bet) async {
+    await _simulateNetworkDelay();
+
+    if (!_userCoins.containsKey(username) || _userCoins[username]! < bet) {
+      return {'success': false, 'message': 'Invalid bet amount'};
+    }
+
+    _userCoins[username] = _userCoins[username]! - bet;
+
+    final int winningNumber = Random().nextInt(37);
+    final (int, roulette_logic.GuessType) extractedNumber =
+        constants.rouletteNumbers[winningNumber];
+
+    final isCorrect = extractedNumber.$2 == guess;
+
+    int winnings = 0;
+    if (isCorrect) {
+      switch (guess) {
+        case roulette_logic.GuessType.green:
+          winnings = bet * 10;
+          break;
+        case roulette_logic.GuessType.red:
+        case roulette_logic.GuessType.black:
+          winnings = bet * 2;
+          break;
+        default:
+          winnings = bet * 36;
+      }
+    }
+
+    _userCoins[username] = _userCoins[username]! + winnings;
+
+    return {
+      'success': isCorrect,
+      'winnings': winnings,
+      'extractedNumber': extractedNumber,
+      'message': isCorrect
+          ? 'You won $winnings coins! The extracted number was $extractedNumber.'
+          : 'You lost $bet coins! The extracted number was $extractedNumber.',
+      'coins': _userCoins[username]!,
+    };
+  }
+
   // Coin Flip Game
   Future<Map<String, dynamic>> submitCoinFlipGuess(
-      String username, game_coinflip.GuessType guessType, int bet) async {
+      String username, game_coinflip.GuessType guess, int bet) async {
     await _simulateNetworkDelay();
 
     if (!_userCoins.containsKey(username) || _userCoins[username]! < bet) {
@@ -116,8 +162,8 @@ class BackendService {
 
     final isHead = Random().nextBool();
 
-    final isCorrect = (isHead && guessType == game_coinflip.GuessType.heads) ||
-        (!isHead && guessType == game_coinflip.GuessType.tails);
+    final isCorrect = (isHead && guess == game_coinflip.GuessType.heads) ||
+        (!isHead && guess == game_coinflip.GuessType.tails);
 
     if (isCorrect) {
       _userCoins[username] = _userCoins[username]! + (bet * 2);
@@ -140,7 +186,7 @@ class BackendService {
   }
 
   Future<Map<String, dynamic>> submitHiLoGuess(
-      String username, hilo_logic.GuessType guessType, int bet) async {
+      String username, hilo_logic.GuessType guess, int bet) async {
     await _simulateNetworkDelay();
 
     if (!_userCoins.containsKey(username) || _userCoins[username]! < bet) {
@@ -154,7 +200,7 @@ class BackendService {
     final nextCard = _deck[Random().nextInt(_deck.length)];
 
     bool correctGuess;
-    switch (guessType) {
+    switch (guess) {
       case hilo_logic.GuessType.higher:
         correctGuess = _getCardValue(nextCard) >= _getCardValue(currentCard!);
         break;
@@ -180,7 +226,7 @@ class BackendService {
 
     int winnings = 0;
     if (correctGuess) {
-      winnings = _getWinnings(guessType, bet);
+      winnings = _getWinnings(guess, bet);
       _userCoins[username] = _userCoins[username]! + winnings;
     }
 

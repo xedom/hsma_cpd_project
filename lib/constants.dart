@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hsma_cpd_project/logic/roulette_logic.dart' as roulette_logic;
 
 class AppColors {
   static const Color primary = Colors.teal;
@@ -8,7 +9,7 @@ class AppColors {
   static const Color gray = Colors.grey;
 }
 
-const List<String> PokerDeckOfCards = [
+const List<String> pokerDeckOfCards = [
   'clubs_1',
   'clubs_2',
   'clubs_3',
@@ -62,4 +63,44 @@ const List<String> PokerDeckOfCards = [
   'spades_12',
   'spades_13',
   'joker'
+];
+
+const List<(int, roulette_logic.GuessType)> rouletteNumbers = [
+  (0, roulette_logic.GuessType.green),
+  (26, roulette_logic.GuessType.black),
+  (3, roulette_logic.GuessType.red),
+  (35, roulette_logic.GuessType.black),
+  (12, roulette_logic.GuessType.red),
+  (28, roulette_logic.GuessType.black),
+  (7, roulette_logic.GuessType.red),
+  (29, roulette_logic.GuessType.black),
+  (18, roulette_logic.GuessType.red),
+  (22, roulette_logic.GuessType.black),
+  (9, roulette_logic.GuessType.red),
+  (31, roulette_logic.GuessType.black),
+  (14, roulette_logic.GuessType.red),
+  (20, roulette_logic.GuessType.black),
+  (1, roulette_logic.GuessType.red),
+  (33, roulette_logic.GuessType.black),
+  (16, roulette_logic.GuessType.red),
+  (24, roulette_logic.GuessType.black),
+  (5, roulette_logic.GuessType.red),
+  (10, roulette_logic.GuessType.black),
+  (23, roulette_logic.GuessType.red),
+  (8, roulette_logic.GuessType.black),
+  (30, roulette_logic.GuessType.red),
+  (11, roulette_logic.GuessType.black),
+  (36, roulette_logic.GuessType.red),
+  (13, roulette_logic.GuessType.black),
+  (27, roulette_logic.GuessType.red),
+  (6, roulette_logic.GuessType.black),
+  (34, roulette_logic.GuessType.red),
+  (17, roulette_logic.GuessType.black),
+  (25, roulette_logic.GuessType.red),
+  (2, roulette_logic.GuessType.black),
+  (21, roulette_logic.GuessType.red),
+  (4, roulette_logic.GuessType.black),
+  (19, roulette_logic.GuessType.red),
+  (15, roulette_logic.GuessType.black),
+  (32, roulette_logic.GuessType.red)
 ];

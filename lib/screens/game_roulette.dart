@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
+import 'package:hsma_cpd_project/logic/roulette_logic.dart';
+import 'package:hsma_cpd_project/widgets/field_input.dart';
 import 'package:hsma_cpd_project/widgets/roulette_widget.dart';
 import 'package:hsma_cpd_project/widgets/button_custom.dart';
 
@@ -11,19 +12,14 @@ class GameRoulettePage extends StatefulWidget {
 }
 
 class GameRoulettePageState extends State<GameRoulettePage> {
-  final math.Random random = math.Random();
-  int randomNumber = 0;
+  final TextEditingController _betController = TextEditingController();
   int extractedNumber = 0;
+  String message = '';
 
-  void _startGame() {
+  void _onAnimationEnd(double finalAngle) {
+    print('Final angle: $finalAngle');
     setState(() {
-      randomNumber = random.nextInt(37);
-    });
-  }
-
-  void _onNumberExtracted(int number) {
-    setState(() {
-      extractedNumber = number;
+      message = 'Number extracted: $extractedNumber';
     });
   }
 
@@ -31,8 +27,6 @@ class GameRoulettePageState extends State<GameRoulettePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        width: double.infinity,
-        height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -41,28 +35,57 @@ class GameRoulettePageState extends State<GameRoulettePage> {
           ),
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
               alignment: Alignment.topCenter,
               child: RouletteWidget(
-                randomNumber: randomNumber,
-                onAnimationEnd: _onNumberExtracted,
+                randomNumber: extractedNumber,
+                onAnimationEnd: _onAnimationEnd,
               ),
             ),
             const SizedBox(height: 20),
-            CustomButton(
-              label: 'Start Game',
-              onPressed: _startGame,
+            FieldInput(
+              hint: 'Bet Amount',
+              controller: _betController,
+              icon: Icons.attach_money,
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: 10),
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              alignment: WrapAlignment.center,
+              children: [
+                CustomButton(
+                  label: 'Red 2x',
+                  onPressed: () => setState(() {
+                    extractedNumber = RouletteLogic.guess(GuessType.red);
+                  }),
+                  color: Colors.red,
+                ),
+                CustomButton(
+                  label: 'Black 2x',
+                  onPressed: () => setState(() {
+                    extractedNumber = RouletteLogic.guess(GuessType.black);
+                  }),
+                  color: Colors.black,
+                ),
+                CustomButton(
+                  label: 'Green 10x',
+                  onPressed: () => setState(() {
+                    extractedNumber = RouletteLogic.guess(GuessType.green);
+                  }),
+                  color: Colors.green,
+                ),
+              ],
             ),
             const SizedBox(height: 20),
             Text(
-              'Random Number: $randomNumber',
+              'Random Number: $extractedNumber',
               style: const TextStyle(color: Colors.white, fontSize: 18),
             ),
-            const SizedBox(height: 10),
             Text(
-              'Extracted Number: $extractedNumber',
+              message,
               style: const TextStyle(color: Colors.white, fontSize: 18),
             ),
           ],

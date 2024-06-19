@@ -1,11 +1,11 @@
-import 'package:hsma_cpd_project/constants.dart';
+import 'package:hsma_cpd_project/constants.dart' as constants;
 import 'package:hsma_cpd_project/logic/backend.dart';
 import 'package:hsma_cpd_project/providers/auth.dart';
 
 enum GuessType { higher, lower, joker, number, figure, red, black }
 
 class HiLoLogic {
-  final List<String> deck = PokerDeckOfCards;
+  final List<String> deck = constants.pokerDeckOfCards;
 
   final BackendService _backendService;
   final AuthProvider _authProvider;

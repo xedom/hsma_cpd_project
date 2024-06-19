@@ -3,7 +3,7 @@ import 'package:hsma_cpd_project/logic/roulette_logic.dart';
 
 class RouletteWidget extends StatefulWidget {
   final int randomNumber;
-  final ValueChanged<int> onAnimationEnd;
+  final ValueChanged<double> onAnimationEnd;
 
   const RouletteWidget({
     super.key,
@@ -35,7 +35,7 @@ class RouletteWidgetState extends State<RouletteWidget>
   void didUpdateWidget(covariant RouletteWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.randomNumber != widget.randomNumber) {
-      rouletteLogic.startGameWithRandomNumber(widget.randomNumber);
+      rouletteLogic.startRoulette(widget.randomNumber);
     }
   }
 
@@ -54,8 +54,11 @@ class RouletteWidgetState extends State<RouletteWidget>
               builder: (context, child) {
                 var angle = rouletteLogic.calculateCurrentAngle();
                 WidgetsBinding.instance.addPostFrameCallback((_) {
-                  widget.onAnimationEnd(
-                      rouletteLogic.extractedNumber.toInt()); // TODO temp fix
+                  if (rouletteLogic.animation.isCompleted &&
+                      !rouletteLogic.completed) {
+                    widget.onAnimationEnd(angle);
+                    rouletteLogic.completed = true;
+                  }
                 });
                 return Transform.rotate(angle: angle, child: child);
               },
