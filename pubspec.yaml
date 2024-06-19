@@ -33,6 +33,7 @@ dependencies:
   dart_jsonwebtoken: ^2.14.0
 
 dev_dependencies:
+  mocktail: ^0.1.0
   flutter_test:
     sdk: flutter
 
