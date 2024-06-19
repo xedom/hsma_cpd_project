@@ -30,6 +30,8 @@ class LoginScreenState extends State<LoginScreen> {
       passwordController.text,
     );
 
+    if (!mounted) return;
+
     if (success) {
       GoRouter.of(context).go('/profile');
     } else {

@@ -39,6 +39,8 @@ class RegisterScreenState extends State<RegisterScreen> {
       passwordController.text,
     );
 
+    if (!mounted) return;
+
     if (success) {
       GoRouter.of(context).go('/profile');
     } else {
