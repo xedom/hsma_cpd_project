@@ -74,6 +74,7 @@ class BackendService {
     }
   }
 
+  // Coin Management
   Future<int> getCoins(String username) async {
     await _simulateNetworkDelay();
 
@@ -102,6 +103,42 @@ class BackendService {
       return true;
     }
     return false;
+  }
+
+  // Crash Game
+  Future<Map<String, dynamic>> submitCrashGuess(
+      String username, double guess, int bet) async {
+    await _simulateNetworkDelay();
+
+    if (!_userCoins.containsKey(username) || _userCoins[username]! < bet) {
+      return {'success': false, 'message': 'Invalid bet amount'};
+    }
+
+    _userCoins[username] = _userCoins[username]! - bet;
+
+    final crashPoint = _generateGeometric(0.7);
+    final success = guess <= crashPoint;
+
+    int winnings = 0;
+    if (success) {
+      winnings = (bet * guess).round();
+      _userCoins[username] = _userCoins[username]! + winnings;
+    }
+
+    return {
+      'success': success,
+      'winnings': winnings,
+      'crashPoint': crashPoint,
+      'coins': _userCoins[username]!,
+      'message': success
+          ? 'You won $winnings coins! The crash point was $crashPoint.'
+          : 'You lost $bet coins! The crash point was $crashPoint.',
+    };
+  }
+
+  double _generateGeometric(double p) {
+    double u = Random().nextDouble();
+    return (log(u) / log(1 - p));
   }
 
   // Roulette Game
@@ -134,18 +171,18 @@ class BackendService {
         default:
           winnings = bet * 36;
       }
-    }
 
-    _userCoins[username] = _userCoins[username]! + winnings;
+      _userCoins[username] = _userCoins[username]! + winnings;
+    }
 
     return {
       'success': isCorrect,
       'winnings': winnings,
       'extractedNumber': extractedNumber,
+      'coins': _userCoins[username]!,
       'message': isCorrect
           ? 'You won $winnings coins! The extracted number was $extractedNumber.'
           : 'You lost $bet coins! The extracted number was $extractedNumber.',
-      'coins': _userCoins[username]!,
     };
   }
 
@@ -171,8 +208,8 @@ class BackendService {
 
     return {
       'success': isCorrect,
-      'message': isCorrect ? 'You won $bet coins!' : 'You lost $bet coins!',
       'coins': _userCoins[username]!,
+      'message': isCorrect ? 'You won $bet coins!' : 'You lost $bet coins!',
     };
   }
 
@@ -232,11 +269,11 @@ class BackendService {
 
     return {
       'success': correctGuess,
-      'message':
-          correctGuess ? 'You won $winnings coins!' : 'You lost $bet coins!',
       'winnings': winnings,
       'nextCard': nextCard,
       'coins': _userCoins[username]!,
+      'message':
+          correctGuess ? 'You won $winnings coins!' : 'You lost $bet coins!',
     };
   }
 

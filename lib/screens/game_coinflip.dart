@@ -121,7 +121,6 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
         if (_animation!.isCompleted && !_isCompleted) {
           showBack = _isHeadPrevious == _isHead ? showBack : !showBack;
           _isHeadPrevious = _isHead;
-          print(_isHeadPrevious);
           _isCompleted = true;
         }
 

@@ -42,9 +42,11 @@ class GameCrashPageState extends State<GameCrashPage> {
       setState(() {
         _rocketValue += 0.01;
 
-        if (_rocketPath.length > 100) _rocketPath.removeAt(0);
-        _rocketPath
-            .add(Offset(_rocketValue * 4, _rocketValue * _rocketValue * 0.05));
+        if (_rocketPath.length > 52) _rocketPath.removeAt(0);
+        _rocketPath.add(Offset(
+          _rocketValue * 4,
+          _rocketValue * _rocketValue * 0.05,
+        ));
         if (_rocketValue >= _stopValue) {
           _timer?.cancel();
           _gameRunning = false;
@@ -186,14 +188,16 @@ class RocketPathPainter extends CustomPainter {
 
     final path = Path();
     if (rocketPath.isNotEmpty) {
-      double stretchX = 100.0;
-      double stretchY = 100.0;
+      double stretchX = 200.0;
+      double stretchY = 3000.0;
 
-      path.moveTo((rocketPath.first.dx - rocketPath.first.dx) * 10,
-          size.height - ((rocketPath.first.dy - rocketPath.first.dy) * 10));
+      final p0 = rocketPath.first;
+      path.moveTo(0, size.height);
       for (final point in rocketPath) {
-        path.lineTo((point.dx - rocketPath.first.dx) * (stretchX),
-            size.height - ((point.dy - rocketPath.first.dy) * stretchY));
+        path.lineTo(
+          (point.dx - p0.dx) * (stretchX),
+          size.height - ((point.dy - p0.dy) * stretchY),
+        );
       }
     }
     canvas.drawPath(path, paint);
