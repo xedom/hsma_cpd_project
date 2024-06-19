@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:hsma_cpd_project/constants.dart';
 import 'package:hsma_cpd_project/widgets/button_custom.dart';
 import 'package:hsma_cpd_project/widgets/field_input.dart';
 
@@ -21,26 +21,29 @@ class GameCrashPageState extends State<GameCrashPage> {
   Timer? _timer;
   double _stopValue = 0;
   String _message = '';
-  List<FlSpot> _rocketPath = [const FlSpot(0, 1)];
+  List<Offset> _rocketPath = [const Offset(0, 0)];
   double _guess = 0;
   double _bet = 0;
 
   void _startGame() {
     setState(() {
       _rocketValue = 0;
-      _rocketPath = [const FlSpot(0, 0)];
+      _rocketPath = [const Offset(0, 0)];
       _gameRunning = true;
-      _stopValue = 1.0 + Random().nextDouble() * 19.0;
+      _stopValue = 0.5 + Random().nextDouble() * 19.0;
+
       _message = '';
       _guess = double.tryParse(_guessController.text) ?? 0;
       _bet = double.tryParse(_betController.text) ?? 0;
     });
 
-    _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+    _timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
       setState(() {
         _rocketValue += 0.1;
+
+        if (_rocketPath.length > 100) _rocketPath.removeAt(0);
         _rocketPath
-            .add(FlSpot(_rocketValue, _rocketValue * _rocketValue * 0.05));
+            .add(Offset(_rocketValue * 4, _rocketValue * _rocketValue * 0.05));
         if (_rocketValue >= _stopValue) {
           _timer?.cancel();
           _gameRunning = false;
@@ -91,64 +94,29 @@ class GameCrashPageState extends State<GameCrashPage> {
             children: [
               Stack(
                 children: [
-                  AspectRatio(
-                    aspectRatio: 1.8,
-                    child: LineChart(
-                      LineChartData(
-                        minX: 0,
-                        maxX: _rocketValue + 1,
-                        minY: 0,
-                        maxY: _rocketValue + 1,
-                        lineBarsData: [
-                          LineChartBarData(
-                            spots: _rocketPath,
-                            isCurved: true,
-                            gradient: const LinearGradient(
-                              colors: [
-                                Color.fromARGB(40, 30, 170, 255),
-                                Color.fromARGB(255, 0, 255, 255),
-                              ],
-                            ),
-                            barWidth: 4,
-                            isStrokeCapRound: true,
-                            dotData: const FlDotData(show: false),
-                            belowBarData: BarAreaData(show: false),
-                          ),
-                        ],
-                        titlesData: const FlTitlesData(
-                          leftTitles: AxisTitles(),
-                          topTitles: AxisTitles(),
-                          bottomTitles: AxisTitles(),
-                          rightTitles: AxisTitles(
-                            axisNameSize: 1,
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              interval: 1,
-                              reservedSize: 50,
-                            ),
-                          ),
-                        ),
-                        borderData: FlBorderData(
-                          show: true,
-                          border: const Border(
-                            bottom: BorderSide(color: Colors.black, width: 1),
-                            right: BorderSide(color: Colors.black, width: 1),
-                            left: BorderSide(color: Colors.transparent),
-                            top: BorderSide(color: Colors.transparent),
-                          ),
-                        ),
-                        gridData: const FlGridData(show: false),
-                      ),
-                    ),
+                  CustomPaint(
+                    size:
+                        Size(min(MediaQuery.of(context).size.width, 500), 300),
+                    painter: RocketPathPainter(_rocketPath),
                   ),
                   if (_rocketPath.isNotEmpty)
                     Positioned(
-                      left: _rocketPath.last.x * 20,
-                      top: 300 - (_rocketPath.last.y * 10),
-                      child: Image.asset(
-                        'assets/rocket.png',
-                        width: 50,
-                        height: 50,
+                      left: _rocketPath.last.dx * 10,
+                      top: 300 -
+                          (_rocketPath.last.dy * 10) -
+                          60, // Adjust position for the label
+                      child: Column(
+                        children: [
+                          Text(
+                            'x${_rocketValue.toStringAsFixed(2)}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Image.asset('assets/rocket.png',
+                              width: 50, height: 50),
+                        ],
                       ),
                     ),
                 ],
@@ -163,7 +131,7 @@ class GameCrashPageState extends State<GameCrashPage> {
               ),
               const SizedBox(height: 10),
               Text(
-                'Rocket Value: x${_rocketValue.toStringAsFixed(2)}',
+                'Rocket x${_rocketValue.toStringAsFixed(2)}',
                 style: const TextStyle(fontSize: 24, color: Colors.white),
               ),
               const SizedBox(height: 20),
@@ -197,5 +165,59 @@ class GameCrashPageState extends State<GameCrashPage> {
         ),
       ),
     );
+  }
+}
+
+class RocketPathPainter extends CustomPainter {
+  final List<Offset> rocketPath;
+
+  RocketPathPainter(this.rocketPath);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.blue
+      ..strokeWidth = 4
+      ..style = PaintingStyle.stroke;
+
+    final path = Path();
+    if (rocketPath.isNotEmpty) {
+      // double stretchX = 10.0 / max(rocketPath.length, 110) * 110;
+      double stretchX = 10.0;
+      // double stretchY =
+      //     10.0 / max(rocketPath.last.dy - rocketPath.first.dy, 25) * 25;
+      double stretchY = 10.0;
+
+      path.moveTo((rocketPath.first.dx - rocketPath.first.dx) * 10,
+          size.height - ((rocketPath.first.dy - rocketPath.first.dy) * 10));
+      for (final point in rocketPath) {
+        path.lineTo((point.dx - rocketPath.first.dx) * (stretchX),
+            size.height - ((point.dy - rocketPath.first.dy) * stretchY));
+      }
+    }
+    canvas.drawPath(path, paint);
+
+    // Draw the border lines
+    final borderPaint = Paint()
+      ..color = AppColors.primary
+      ..strokeWidth = 4
+      ..style = PaintingStyle.stroke;
+
+    canvas.drawLine(
+      Offset(0, size.height),
+      Offset(size.width, size.height),
+      borderPaint,
+    );
+
+    canvas.drawLine(
+      Offset(size.width, 0),
+      Offset(size.width, size.height),
+      borderPaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
   }
 }
