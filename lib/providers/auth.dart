@@ -33,8 +33,8 @@ class AuthProvider extends ChangeNotifier {
     return false;
   }
 
-  Future<void> logout() async {
-    await _backendService.logout();
+  logout() {
+    _backendService.logout();
     _isLoggedIn = false;
     _token = null;
     _coins = 0;
