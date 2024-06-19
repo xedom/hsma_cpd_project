@@ -17,7 +17,6 @@ class GameRoulettePageState extends State<GameRoulettePage> {
   String message = '';
 
   void _onAnimationEnd(double finalAngle) {
-    print('Final angle: $finalAngle');
     setState(() {
       message = 'Number extracted: $extractedNumber';
     });
@@ -80,10 +79,6 @@ class GameRoulettePageState extends State<GameRoulettePage> {
               ],
             ),
             const SizedBox(height: 20),
-            Text(
-              'Random Number: $extractedNumber',
-              style: const TextStyle(color: Colors.white, fontSize: 18),
-            ),
             Text(
               message,
               style: const TextStyle(color: Colors.white, fontSize: 18),

@@ -46,11 +46,7 @@ class RouletteLogic with ChangeNotifier {
     _controller.duration = Duration(milliseconds: (1000 * duration).toInt());
     _controller.forward();
 
-    _controller.addListener(() {
-      if (_controller.value == 1) {
-        notifyListeners();
-      }
-    });
+    _controller.addListener(() {});
 
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
