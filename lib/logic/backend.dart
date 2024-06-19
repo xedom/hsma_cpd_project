@@ -119,7 +119,7 @@ class BackendService {
 
     int winnings = 0;
     if (success) {
-      winnings = (bet * guess).round();
+      winnings = (bet * (1 + guess)).round();
       _userCoins[username] = _userCoins[username]! + winnings;
     }
 

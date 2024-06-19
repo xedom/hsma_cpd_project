@@ -1,7 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:hsma_cpd_project/constants.dart';
+import 'package:hsma_cpd_project/logic/backend.dart';
 import 'package:hsma_cpd_project/logic/crash_logic.dart';
+import 'package:hsma_cpd_project/providers/auth.dart';
 import 'package:hsma_cpd_project/widgets/button_custom.dart';
 import 'package:hsma_cpd_project/widgets/field_input.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +21,14 @@ class GameCrashPageState extends State<GameCrashPage> {
   @override
   void initState() {
     super.initState();
-    logic = GameCrashLogic();
+    _initializeLogic();
+  }
+
+  void _initializeLogic() async {
+    logic = GameCrashLogic(
+      Provider.of<BackendService>(context, listen: false),
+      Provider.of<AuthProvider>(context, listen: false),
+    );
   }
 
   @override
@@ -62,23 +71,24 @@ class GameCrashPageState extends State<GameCrashPage> {
                     Consumer<GameCrashLogic>(
                       builder: (context, logic, _) {
                         if (logic.rocketPath.isNotEmpty) {
-                          return Positioned(
-                            left: logic.rocketPath.last.dx * 10,
-                            top: 300 - (logic.rocketPath.last.dy * 10) - 60,
-                            child: Column(
-                              children: [
-                                Text(
-                                  'x${logic.rocketValue.toStringAsFixed(2)}',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Image.asset('assets/rocket.png',
-                                    width: 50, height: 50),
-                              ],
-                            ),
-                          );
+                          // return Positioned(
+                          //   left: logic.rocketPath.last.dx * 10,
+                          //   top: 300 - (logic.rocketPath.last.dy * 10) - 60,
+                          //   child: Column(
+                          //     children: [
+                          //       Text(
+                          //         'x${logic.rocketValue.toStringAsFixed(2)}',
+                          //         style: const TextStyle(
+                          //           color: Colors.white,
+                          //           fontWeight: FontWeight.bold,
+                          //         ),
+                          //       ),
+                          //       Image.asset('assets/rocket.png',
+                          //           width: 50, height: 50),
+                          //     ],
+                          //   ),
+                          // );
+                          return Container();
                         } else {
                           return Container();
                         }
@@ -92,9 +102,10 @@ class GameCrashPageState extends State<GameCrashPage> {
                     return Text(
                       logic.message,
                       style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white70,
+                      ),
                     );
                   },
                 ),
@@ -133,7 +144,7 @@ class GameCrashPageState extends State<GameCrashPage> {
                           )
                         : CustomButton(
                             label: 'Start Game',
-                            onPressed: logic.startGame,
+                            onPressed: () async => logic.startGame(),
                           );
                   },
                 ),

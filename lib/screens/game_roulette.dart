@@ -15,10 +15,42 @@ class GameRoulettePageState extends State<GameRoulettePage> {
   final TextEditingController _betController = TextEditingController();
   int extractedNumber = 0;
   String message = '';
+  bool displayResult = false;
 
   void _onAnimationEnd(double finalAngle) {
     setState(() {
-      message = 'Number extracted: $extractedNumber';
+      displayResult = true;
+    });
+  }
+
+  void _placeBet(BuildContext context, GuessType guess) async {
+    setState(() {
+      displayResult = false;
+    });
+    final bet = int.tryParse(_betController.text) ?? 0;
+
+    if (bet <= 0) {
+      return setState(() {
+        message = 'Invalid bet amount';
+        displayResult = true;
+      });
+    }
+
+    final result = await RouletteLogic.guess(context, guess, bet);
+    print(result);
+    final success = result['success'] as bool;
+
+    setState(() {
+      extractedNumber = (result['extractedNumber'] as (int, GuessType)).$1;
+
+      if (success) {
+        message = 'You won ${result['winnings']} coins!';
+      } else {
+        message =
+            'You lost $bet coins! The extracted number was $extractedNumber.';
+      }
+      print(extractedNumber);
+      print(message);
     });
   }
 
@@ -44,8 +76,12 @@ class GameRoulettePageState extends State<GameRoulettePage> {
             ),
             const SizedBox(height: 10),
             Text(
-              message,
-              style: const TextStyle(color: Colors.white, fontSize: 18),
+              displayResult ? message : "",
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white70,
+              ),
             ),
             const SizedBox(height: 20),
             FieldInput(
@@ -61,26 +97,17 @@ class GameRoulettePageState extends State<GameRoulettePage> {
               alignment: WrapAlignment.center,
               children: [
                 CustomButton(
-                  label: 'Red 2x',
-                  onPressed: () => setState(() {
-                    extractedNumber = RouletteLogic.guess(GuessType.red);
-                  }),
-                  color: Colors.red,
-                ),
+                    label: 'Red 2x',
+                    color: Colors.red,
+                    onPressed: () => _placeBet(context, GuessType.red)),
                 CustomButton(
-                  label: 'Black 2x',
-                  onPressed: () => setState(() {
-                    extractedNumber = RouletteLogic.guess(GuessType.black);
-                  }),
-                  color: Colors.black,
-                ),
+                    label: 'Black 2x',
+                    color: Colors.black,
+                    onPressed: () => _placeBet(context, GuessType.black)),
                 CustomButton(
-                  label: 'Green 10x',
-                  onPressed: () => setState(() {
-                    extractedNumber = RouletteLogic.guess(GuessType.green);
-                  }),
-                  color: Colors.green,
-                ),
+                    label: 'Green 10x',
+                    color: Colors.green,
+                    onPressed: () => _placeBet(context, GuessType.green)),
               ],
             ),
           ],

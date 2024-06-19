@@ -1,6 +1,9 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:hsma_cpd_project/constants.dart' as constants;
+import 'package:hsma_cpd_project/logic/backend.dart';
+import 'package:hsma_cpd_project/providers/auth.dart';
+import 'package:provider/provider.dart';
 
 enum GuessType { red, black, green }
 
@@ -23,11 +26,27 @@ class RouletteLogic with ChangeNotifier {
 
   Animation<double> get animation => _controller;
 
-  static int guess(GuessType guess) {
-    // call backend
-    // update coins
+  static Future<Map<String, dynamic>> guess(
+    BuildContext context,
+    GuessType guess,
+    int bet,
+  ) async {
+    final backend = Provider.of<BackendService>(context, listen: false);
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+    final result = await backend.submitRouletteGuess(
+      auth.currentUser!,
+      guess,
+      bet,
+    );
 
-    return math.Random().nextInt(30);
+    auth.updateCoins(result['coins']);
+
+    return {
+      'success': result['success'],
+      'winnings': result['winnings'],
+      'extractedNumber': result['extractedNumber'],
+      'coins': result['coins'],
+    };
   }
 
   void startRoulette(int randomNumber) {

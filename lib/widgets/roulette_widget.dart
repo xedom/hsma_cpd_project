@@ -35,6 +35,7 @@ class RouletteWidgetState extends State<RouletteWidget>
   void didUpdateWidget(covariant RouletteWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.randomNumber != widget.randomNumber) {
+      rouletteLogic.completed = false;
       rouletteLogic.startRoulette(widget.randomNumber);
     }
   }

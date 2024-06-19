@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:hsma_cpd_project/logic/backend.dart';
+import 'package:hsma_cpd_project/providers/auth.dart';
 
 class GameCrashLogic with ChangeNotifier {
   final TextEditingController guessController = TextEditingController();
   final TextEditingController betController = TextEditingController();
+  final BackendService _backendService;
+  final AuthProvider _authProvider;
   double rocketValue = 0;
   bool gameRunning = false;
   Timer? timer;
@@ -12,16 +16,35 @@ class GameCrashLogic with ChangeNotifier {
   String message = '';
   List<Offset> rocketPath = [const Offset(0, 0)];
   double guess = 0;
-  double bet = 0;
+  int bet = 0;
+  int coins = 0;
 
-  void startGame() {
+  GameCrashLogic(this._backendService, this._authProvider);
+
+  void startGame() async {
     rocketValue = 0;
     rocketPath = [const Offset(0, 0)];
     gameRunning = true;
-    stopValue = _generateGeometric(0.7);
-    message = '';
+
     guess = double.tryParse(guessController.text) ?? 0;
-    bet = double.tryParse(betController.text) ?? 0;
+    bet = int.tryParse(betController.text) ?? 0;
+
+    if (guess <= 0 || bet <= 0) {
+      message = 'Invalid guess or bet!';
+      gameRunning = false;
+      notifyListeners();
+      return;
+    }
+
+    final result = await _backendService.submitCrashGuess(
+      _authProvider.currentUser!,
+      guess,
+      bet,
+    );
+
+    stopValue = result['crashPoint'];
+    coins = result['coins'];
+
     notifyListeners();
 
     timer = Timer.periodic(const Duration(milliseconds: 1), (timer) {
@@ -40,18 +63,15 @@ class GameCrashLogic with ChangeNotifier {
     });
   }
 
-  double _generateGeometric(double p) {
-    double u = Random().nextDouble();
-    return (log(u) / log(1 - p));
-  }
-
   void _checkResult() {
-    if (rocketValue >= guess) {
-      double winnings = bet * guess;
+    if (guess <= rocketValue) {
+      int winnings = (bet * guess).round();
       message = 'You won ${winnings.toStringAsFixed(2)} coins!';
     } else {
       message = 'You lost ${bet.toStringAsFixed(2)} coins!';
     }
+
+    _authProvider.updateCoins(coins);
     notifyListeners();
   }
 
