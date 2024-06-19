@@ -44,10 +44,11 @@ class RouletteWidgetState extends State<RouletteWidget>
     return Stack(
       alignment: Alignment.topCenter,
       children: [
-        FractionalTranslation(
-          translation: const Offset(0, -0.5),
-          child: ClipRect(
-            clipper: HalfClipper(),
+        SizedBox(
+          height: MediaQuery.of(context).size.width * 0.5,
+          child: OverflowBox(
+            maxHeight: MediaQuery.of(context).size.width,
+            alignment: Alignment.bottomCenter,
             child: AnimatedBuilder(
               animation: rouletteLogic.animation,
               child: Image.asset('assets/roulette.png'),
@@ -66,10 +67,10 @@ class RouletteWidgetState extends State<RouletteWidget>
           ),
         ),
         Positioned(
-          top: 150,
+          top: MediaQuery.of(context).size.width * 0.3,
           child: Container(
-            width: 20,
-            height: 20,
+            width: MediaQuery.of(context).size.width * 0.035,
+            height: MediaQuery.of(context).size.width * 0.035,
             decoration: BoxDecoration(
               image: const DecorationImage(
                 image: AssetImage('assets/roulette_ball.png'),

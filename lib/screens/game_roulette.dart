@@ -42,6 +42,11 @@ class GameRoulettePageState extends State<GameRoulettePage> {
                 onAnimationEnd: _onAnimationEnd,
               ),
             ),
+            const SizedBox(height: 10),
+            Text(
+              message,
+              style: const TextStyle(color: Colors.white, fontSize: 18),
+            ),
             const SizedBox(height: 20),
             FieldInput(
               hint: 'Bet Amount',
@@ -77,11 +82,6 @@ class GameRoulettePageState extends State<GameRoulettePage> {
                   color: Colors.green,
                 ),
               ],
-            ),
-            const SizedBox(height: 20),
-            Text(
-              message,
-              style: const TextStyle(color: Colors.white, fontSize: 18),
             ),
           ],
         ),
