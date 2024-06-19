@@ -50,8 +50,8 @@ flutter:
     - assets/rocket.png
     - assets/roulette.png
     - assets/roulette_ball.png
-    - assets/heads.png
-    - assets/tails.png
+    - assets/coin_heads.png
+    - assets/coin_tails.png
     - assets/cards/back.webp
     - assets/cards/clubs_1.png
     - assets/cards/clubs_10.png

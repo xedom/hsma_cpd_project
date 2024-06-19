@@ -22,10 +22,11 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
   final TextEditingController _betController = TextEditingController();
   GuessType? _userGuess;
   String _message = '';
-  bool _isHeads = true;
+  bool _isHead = true;
+  bool _isHeadPrevious = true;
+  bool _isCompleted = false;
   AnimationController? _animationController;
   Animation<double>? _animation;
-  bool _showFront = true;
 
   Future<void> _initialize() async {
     _backendService = Provider.of<BackendService>(context, listen: false);
@@ -54,6 +55,7 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
   }
 
   void _flipCoin() async {
+    _isCompleted = false;
     // Überprüfen Sie, ob das Wettfeld leer ist
     if (_betController.text.isEmpty) {
       setState(() {
@@ -84,6 +86,12 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
     // Aktualisieren Sie die Münzen im AuthProvider
     _authProvider!.updateCoins(result['coins']);
 
+    setState(() {
+      _isHead = result['success']
+          ? _userGuess == GuessType.heads
+          : _userGuess == GuessType.tails;
+    });
+
     // Vergleichen Sie _userGuess und _coinResult, um zu bestimmen, ob der Benutzer gewonnen oder verloren hat
     if (result['success']) {
       _message = 'Sie haben ${bet * 2} Münzen gewonnen!';
@@ -93,30 +101,41 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
 
     // Führen Sie die Münzwurfanimation aus
     _animationController?.reset();
-    _animationController?.forward().then((_) {
-      setState(() {
-        _showFront = !_showFront;
-      });
-    });
+    _animationController?.forward();
   }
 
   Widget _buildCoinImage() {
     return AnimatedBuilder(
       animation: _animation!,
       builder: (context, child) {
-        final angle = _animation!.value * 2 * pi;
+        final progress = _animation!.value;
+
+        final shouldSwitch = _isHeadPrevious == _isHead ? 2 : 3;
+
+        final angle = (progress * pi * shouldSwitch) % (2 * pi);
         final transform = Matrix4.identity()
           ..setEntry(3, 2, 0.001)
           ..rotateY(angle);
-        final showBack = angle > pi;
+        bool showBack = angle >= pi / 2 && angle < 3 * pi / 2;
+
+        if (_animation!.isCompleted && !_isCompleted) {
+          showBack = _isHeadPrevious == _isHead ? showBack : !showBack;
+          _isHeadPrevious = _isHead;
+          print(_isHeadPrevious);
+          _isCompleted = true;
+        }
 
         return Transform(
           transform: transform,
           alignment: Alignment.center,
           child: Image.asset(
             showBack
-                ? (_isHeads ? 'assets/tails.png' : 'assets/heads.png')
-                : (_isHeads ? 'assets/heads.png' : 'assets/tails.png'),
+                ? (_isHeadPrevious
+                    ? 'assets/coin_tails.png'
+                    : 'assets/coin_heads.png')
+                : (_isHeadPrevious
+                    ? 'assets/coin_heads.png'
+                    : 'assets/coin_tails.png'),
             height: 250,
             width: 250,
           ),
@@ -179,7 +198,7 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
                         borderRadius: BorderRadius.circular(99),
                       ),
                       child: Image.asset(
-                        'assets/heads.png',
+                        'assets/coin_heads.png',
                         height: 80,
                         width: 80,
                       ),
@@ -203,7 +222,7 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
                         borderRadius: BorderRadius.circular(99),
                       ),
                       child: Image.asset(
-                        'assets/tails.png',
+                        'assets/coin_tails.png',
                         height: 80,
                         width: 80,
                       ),
