@@ -27,7 +27,8 @@ class GameHiLoPageState extends State<GameHiLoPage> {
 
   void _initializeLogic() async {
     final backendService = Provider.of<BackendService>(context, listen: false);
-    _logic = hilo_logic.HiLoLogic(backendService);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    _logic = hilo_logic.HiLoLogic(backendService, authProvider);
     await _logic.initialize();
     setState(() {
       _isLoading = false;
@@ -42,12 +43,13 @@ class GameHiLoPageState extends State<GameHiLoPage> {
     }
   }
 
-  Future<void> _saveGuess(hilo_logic.GuessType guessType) async {
+  Future<void> _makeGuess(hilo_logic.GuessType guessType) async {
     int bet = int.tryParse(_betController.text) ?? 0;
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    String? token = authProvider.token;
 
     _logic.guess(guessType, bet);
+    // Update the coins in the AuthProvider
+    await authProvider.fetchCoins();
     _updateState();
   }
 
@@ -114,43 +116,43 @@ class GameHiLoPageState extends State<GameHiLoPage> {
                           label:
                               'Higher/Eq ${_logic.getBetMultiplier(hilo_logic.GuessType.higher)}',
                           onPressed: () =>
-                              _saveGuess(hilo_logic.GuessType.higher),
+                              _makeGuess(hilo_logic.GuessType.higher),
                         ),
                         CustomButton(
                           label:
                               'Lower/Eq ${_logic.getBetMultiplier(hilo_logic.GuessType.lower)}',
                           onPressed: () =>
-                              _saveGuess(hilo_logic.GuessType.lower),
+                              _makeGuess(hilo_logic.GuessType.lower),
                         ),
                         CustomButton(
                           label:
                               'Joker ${_logic.getBetMultiplier(hilo_logic.GuessType.joker)}',
                           onPressed: () =>
-                              _saveGuess(hilo_logic.GuessType.joker),
+                              _makeGuess(hilo_logic.GuessType.joker),
                         ),
                         CustomButton(
                           label:
                               'Number: 2-9 ${_logic.getBetMultiplier(hilo_logic.GuessType.number)}',
                           onPressed: () =>
-                              _saveGuess(hilo_logic.GuessType.number),
+                              _makeGuess(hilo_logic.GuessType.number),
                         ),
                         CustomButton(
                           label:
                               'Figure: JQKA ${_logic.getBetMultiplier(hilo_logic.GuessType.figure)}',
                           onPressed: () =>
-                              _saveGuess(hilo_logic.GuessType.figure),
+                              _makeGuess(hilo_logic.GuessType.figure),
                         ),
                         CustomButton(
                           label:
                               'Red ${_logic.getBetMultiplier(hilo_logic.GuessType.red)}',
-                          onPressed: () => _saveGuess(hilo_logic.GuessType.red),
+                          onPressed: () => _makeGuess(hilo_logic.GuessType.red),
                           color: Colors.red,
                         ),
                         CustomButton(
                           label:
                               'Black ${_logic.getBetMultiplier(hilo_logic.GuessType.black)}',
                           onPressed: () =>
-                              _saveGuess(hilo_logic.GuessType.black),
+                              _makeGuess(hilo_logic.GuessType.black),
                           color: Colors.black,
                           textColor: Colors.white,
                         ),

@@ -54,7 +54,13 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  void addCoins(int amount) {
+  void updateCoins(int newCoins) {
+    _coins = newCoins;
+    notifyListeners();
+  }
+
+  void addCoins(int amount) async {
+    await _backendService.addCoins(currentUser!, amount);
     _coins += amount;
     notifyListeners();
   }

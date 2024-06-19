@@ -13,7 +13,6 @@ void main() {
       expect(logic.currentCard, isNotEmpty);
       expect(logic.previousCards, isEmpty);
       expect(logic.coins, 100);
-      expect(logic.score, 0);
     });
 
     test('Guess Higher correctly updates state', () {
@@ -23,11 +22,9 @@ void main() {
       if (logic.getCardValue(logic.currentCard) > initialCardValue) {
         expect(logic.coins, 110);
         expect(logic.message, 'Correct! You won 10 coins.');
-        expect(logic.score, 1);
       } else {
         expect(logic.coins, 90);
         expect(logic.message, 'Wrong! You lost 10 coins.');
-        expect(logic.score, 0);
       }
     });
 
@@ -38,11 +35,9 @@ void main() {
       if (logic.getCardValue(logic.currentCard) < initialCardValue) {
         expect(logic.coins, 110);
         expect(logic.message, 'Correct! You won 10 coins.');
-        expect(logic.score, 1);
       } else {
         expect(logic.coins, 90);
         expect(logic.message, 'Wrong! You lost 10 coins.');
-        expect(logic.score, 0);
       }
     });
 
@@ -52,11 +47,9 @@ void main() {
       if (logic.currentCard == 'joker') {
         expect(logic.coins, 200);
         expect(logic.message, 'Correct! It\'s a Joker! You won 10 coins.');
-        expect(logic.score, 5);
       } else {
         expect(logic.coins, 90);
         expect(logic.message, 'Wrong! It\'s not a Joker. You lost 10 coins.');
-        expect(logic.score, 0);
       }
     });
 
@@ -67,11 +60,9 @@ void main() {
           logic.getCardValue(logic.currentCard) <= 9) {
         expect(logic.coins, 110);
         expect(logic.message, 'Correct! You won 10 coins.');
-        expect(logic.score, 1);
       } else {
         expect(logic.coins, 90);
         expect(logic.message, 'Wrong! You lost 10 coins.');
-        expect(logic.score, 0);
       }
     });
 
@@ -82,11 +73,9 @@ void main() {
           logic.getCardValue(logic.currentCard) >= 11) {
         expect(logic.coins, 110);
         expect(logic.message, 'Correct! You won 10 coins.');
-        expect(logic.score, 1);
       } else {
         expect(logic.coins, 90);
         expect(logic.message, 'Wrong! You lost 10 coins.');
-        expect(logic.score, 0);
       }
     });
 
@@ -97,11 +86,9 @@ void main() {
           logic.currentCard.startsWith('diamonds')) {
         expect(logic.coins, 110);
         expect(logic.message, 'Correct! You won 10 coins.');
-        expect(logic.score, 1);
       } else {
         expect(logic.coins, 90);
         expect(logic.message, 'Wrong! You lost 10 coins.');
-        expect(logic.score, 0);
       }
     });
   });

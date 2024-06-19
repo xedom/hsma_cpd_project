@@ -1,10 +1,15 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:hsma_cpd_project/logic/backend.dart';
+import 'package:hsma_cpd_project/providers/auth.dart';
 import 'package:hsma_cpd_project/widgets/button_custom.dart';
 import 'package:hsma_cpd_project/widgets/field_input.dart';
+import 'package:provider/provider.dart';
+
+enum GuessType { tails, heads, none }
 
 class GameCoinFlipPage extends StatefulWidget {
-  const GameCoinFlipPage({Key? key}) : super(key: key);
+  const GameCoinFlipPage({super.key});
 
   @override
   GameCoinFlipPageState createState() => GameCoinFlipPageState();
@@ -12,17 +17,24 @@ class GameCoinFlipPage extends StatefulWidget {
 
 class GameCoinFlipPageState extends State<GameCoinFlipPage>
     with SingleTickerProviderStateMixin {
+  BackendService? _backendService;
+  AuthProvider? _authProvider;
   final TextEditingController _betController = TextEditingController();
-  String _userGuess = '';
-  String _coinResult = '';
+  GuessType? _userGuess;
   String _message = '';
   bool _isHeads = true;
   AnimationController? _animationController;
   Animation<double>? _animation;
   bool _showFront = true;
 
+  Future<void> _initialize() async {
+    _backendService = Provider.of<BackendService>(context, listen: false);
+    _authProvider = Provider.of<AuthProvider>(context, listen: false);
+  }
+
   @override
   void initState() {
+    _initialize();
     super.initState();
     _animationController = AnimationController(
       duration: const Duration(seconds: 2),
@@ -41,7 +53,7 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
     super.dispose();
   }
 
-  void _flipCoin() {
+  void _flipCoin() async {
     // Überprüfen Sie, ob das Wettfeld leer ist
     if (_betController.text.isEmpty) {
       setState(() {
@@ -51,14 +63,14 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
     }
 
     // Überprüfen Sie, ob der Benutzer eine Seite ausgewählt hat
-    if (_userGuess.isEmpty) {
+    if (_userGuess == null) {
       setState(() {
         _message = 'Bitte wählen Sie eine Seite der Münze aus.';
       });
       return;
     }
 
-    final bet = double.tryParse(_betController.text);
+    final bet = int.tryParse(_betController.text);
     if (bet == null || bet <= 0) {
       setState(() {
         _message = 'Bitte geben Sie einen gültigen Wetteinsatz ein.';
@@ -66,12 +78,14 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
       return;
     }
 
-    // Aktualisieren Sie _isHeads und _coinResult basierend auf dem Ergebnis von Random().nextBool()
-    _isHeads = Random().nextBool();
-    _coinResult = _isHeads ? 'Heads' : 'Tails';
+    final result = await _backendService!
+        .submitCoinFlipGuess(_authProvider!.currentUser!, _userGuess!, bet);
+
+    // Aktualisieren Sie die Münzen im AuthProvider
+    _authProvider!.updateCoins(result['coins']);
 
     // Vergleichen Sie _userGuess und _coinResult, um zu bestimmen, ob der Benutzer gewonnen oder verloren hat
-    if (_userGuess != _coinResult) {
+    if (result['success']) {
       _message = 'Sie haben ${bet * 2} Münzen gewonnen!';
     } else {
       _message = 'Sie haben ${bet.toStringAsFixed(2)} Münzen verloren!';
@@ -103,8 +117,8 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
             showBack
                 ? (_isHeads ? 'assets/tails.png' : 'assets/heads.png')
                 : (_isHeads ? 'assets/heads.png' : 'assets/tails.png'),
-            height: 300,
-            width: 300,
+            height: 250,
+            width: 250,
           ),
         );
       },
@@ -129,9 +143,8 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 40),
               _buildCoinImage(),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               Text(
                 _message,
                 style: const TextStyle(
@@ -145,54 +158,54 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
                 'Make a guess: Heads or Tails',
                 style: TextStyle(fontSize: 24, color: Colors.white),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   GestureDetector(
                     onTap: () {
                       setState(() {
-                        _userGuess = 'Heads';
+                        _userGuess = GuessType.heads;
                       });
                     },
                     child: Container(
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: _userGuess == 'Heads'
+                          color: _userGuess == GuessType.heads
                               ? Colors.teal
                               : Colors.transparent,
                           width: 3,
                         ),
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(99),
                       ),
                       child: Image.asset(
                         'assets/heads.png',
-                        height: 100,
-                        width: 100,
+                        height: 80,
+                        width: 80,
                       ),
                     ),
                   ),
-                  const SizedBox(width: 20),
+                  const SizedBox(width: 10),
                   GestureDetector(
                     onTap: () {
                       setState(() {
-                        _userGuess = 'Tails';
+                        _userGuess = GuessType.tails;
                       });
                     },
                     child: Container(
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: _userGuess == 'Tails'
+                          color: _userGuess == GuessType.tails
                               ? Colors.teal
                               : Colors.transparent,
                           width: 3,
                         ),
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(99),
                       ),
                       child: Image.asset(
                         'assets/tails.png',
-                        height: 100,
-                        width: 100,
+                        height: 80,
+                        width: 80,
                       ),
                     ),
                   ),
@@ -203,10 +216,9 @@ class GameCoinFlipPageState extends State<GameCoinFlipPage>
                 hint: 'Bet Amount',
                 controller: _betController,
                 icon: Icons.attach_money,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               CustomButton(
                 label: 'Flip Coin',
                 onPressed: _flipCoin,

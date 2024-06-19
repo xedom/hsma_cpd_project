@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
+import 'package:hsma_cpd_project/constants.dart';
+import 'package:hsma_cpd_project/logic/hilo_logic.dart' as hilo_logic;
+import 'package:hsma_cpd_project/screens/game_coinflip.dart' as game_coinflip;
 
-enum GuessType { higher, lower, joker, number, figure, red, black }
+// enum GuessType { higher, lower, joker, number, figure, red, black }
 
 class BackendService {
   final Map<String, String> _users = {'pedro': '1234', 'john': 'password'};
@@ -13,66 +16,12 @@ class BackendService {
   String? _currentUser;
   String? _currentToken;
 
-  static const List<String> _deck = [
-    'clubs_1',
-    'clubs_2',
-    'clubs_3',
-    'clubs_4',
-    'clubs_5',
-    'clubs_6',
-    'clubs_7',
-    'clubs_8',
-    'clubs_9',
-    'clubs_10',
-    'clubs_11',
-    'clubs_12',
-    'clubs_13',
-    'diamonds_1',
-    'diamonds_2',
-    'diamonds_3',
-    'diamonds_4',
-    'diamonds_5',
-    'diamonds_6',
-    'diamonds_7',
-    'diamonds_8',
-    'diamonds_9',
-    'diamonds_10',
-    'diamonds_11',
-    'diamonds_12',
-    'diamonds_13',
-    'hearts_1',
-    'hearts_2',
-    'hearts_3',
-    'hearts_4',
-    'hearts_5',
-    'hearts_6',
-    'hearts_7',
-    'hearts_8',
-    'hearts_9',
-    'hearts_10',
-    'hearts_11',
-    'hearts_12',
-    'hearts_13',
-    'spades_1',
-    'spades_2',
-    'spades_3',
-    'spades_4',
-    'spades_5',
-    'spades_6',
-    'spades_7',
-    'spades_8',
-    'spades_9',
-    'spades_10',
-    'spades_11',
-    'spades_12',
-    'spades_13',
-    'joker'
-  ];
+  static const List<String> _deck = PokerDeckOfCards;
 
   String? _lastCard;
 
   Future<void> _simulateNetworkDelay() async {
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 0));
   }
 
   Future<String?> login(String username, String password) async {
@@ -130,6 +79,7 @@ class BackendService {
     if (_userCoins.containsKey(username)) {
       return _userCoins[username]!;
     }
+
     return 0;
   }
 
@@ -153,6 +103,34 @@ class BackendService {
     return false;
   }
 
+  // Coin Flip Game
+  Future<Map<String, dynamic>> submitCoinFlipGuess(
+      String username, game_coinflip.GuessType guessType, int bet) async {
+    await _simulateNetworkDelay();
+
+    if (!_userCoins.containsKey(username) || _userCoins[username]! < bet) {
+      return {'success': false, 'message': 'Invalid bet amount'};
+    }
+
+    _userCoins[username] = _userCoins[username]! - bet;
+
+    final isHead = Random().nextBool();
+
+    final isCorrect = (isHead && guessType == game_coinflip.GuessType.heads) ||
+        (!isHead && guessType == game_coinflip.GuessType.tails);
+
+    if (isCorrect) {
+      _userCoins[username] = _userCoins[username]! + (bet * 2);
+    }
+
+    return {
+      'success': isCorrect,
+      'message': isCorrect ? 'You won $bet coins!' : 'You lost $bet coins!',
+      'coins': _userCoins[username]!,
+    };
+  }
+
+  // HiLo Game
   Future<String> getHiLoCurrentCard() async {
     await _simulateNetworkDelay();
 
@@ -161,8 +139,8 @@ class BackendService {
     return _lastCard!;
   }
 
-  Future<Map<String, dynamic>> processHiLoGuess(
-      String username, GuessType guessType, int bet) async {
+  Future<Map<String, dynamic>> submitHiLoGuess(
+      String username, hilo_logic.GuessType guessType, int bet) async {
     await _simulateNetworkDelay();
 
     if (!_userCoins.containsKey(username) || _userCoins[username]! < bet) {
@@ -177,25 +155,25 @@ class BackendService {
 
     bool correctGuess;
     switch (guessType) {
-      case GuessType.higher:
+      case hilo_logic.GuessType.higher:
         correctGuess = _getCardValue(nextCard) >= _getCardValue(currentCard!);
         break;
-      case GuessType.lower:
+      case hilo_logic.GuessType.lower:
         correctGuess = _getCardValue(nextCard) <= _getCardValue(currentCard!);
         break;
-      case GuessType.joker:
+      case hilo_logic.GuessType.joker:
         correctGuess = nextCard == 'joker';
         break;
-      case GuessType.number:
+      case hilo_logic.GuessType.number:
         correctGuess = _isNumber(nextCard);
         break;
-      case GuessType.figure:
+      case hilo_logic.GuessType.figure:
         correctGuess = _isFigure(nextCard);
         break;
-      case GuessType.red:
+      case hilo_logic.GuessType.red:
         correctGuess = _isRed(nextCard);
         break;
-      case GuessType.black:
+      case hilo_logic.GuessType.black:
         correctGuess = !_isRed(nextCard);
         break;
     }
@@ -212,6 +190,7 @@ class BackendService {
           correctGuess ? 'You won $winnings coins!' : 'You lost $bet coins!',
       'winnings': winnings,
       'nextCard': nextCard,
+      'coins': _userCoins[username]!,
     };
   }
 
@@ -236,22 +215,22 @@ class BackendService {
     return card.startsWith('hearts') || card.startsWith('diamonds');
   }
 
-  int _getWinnings(GuessType guessType, int bet) {
+  int _getWinnings(hilo_logic.GuessType guessType, int bet) {
     switch (guessType) {
-      case GuessType.joker:
+      case hilo_logic.GuessType.joker:
         return bet * 25;
 
-      case GuessType.number:
+      case hilo_logic.GuessType.number:
         return (bet * 1.5).round();
 
-      case GuessType.figure:
+      case hilo_logic.GuessType.figure:
         return bet * 3;
 
-      case GuessType.red:
-      case GuessType.black:
+      case hilo_logic.GuessType.red:
+      case hilo_logic.GuessType.black:
         return bet * 2;
 
-      case GuessType.higher:
+      case hilo_logic.GuessType.higher:
         {
           int currentCardValue = _getCardValue(_lastCard!);
           double probability = _deck
@@ -263,7 +242,7 @@ class BackendService {
           return (bet * multiplier).round();
         }
 
-      case GuessType.lower:
+      case hilo_logic.GuessType.lower:
         {
           int currentCardValue = _getCardValue(_lastCard!);
           double probability = _deck
