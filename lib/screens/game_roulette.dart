@@ -14,6 +14,7 @@ class GameRoulettePage extends StatefulWidget {
 
 class GameRoulettePageState extends State<GameRoulettePage> {
   final TextEditingController _betController = TextEditingController();
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   int extractedNumber = 0;
   String message = '';
   bool displayResult = false;
@@ -25,10 +26,20 @@ class GameRoulettePageState extends State<GameRoulettePage> {
       displayResult = true;
       buttonsEnabled = true;
 
+      if (previousNumbers.length >= 15) {
+        previousNumbers.removeAt(previousNumbers.length - 1);
+        _listKey.currentState?.removeItem(
+          previousNumbers.length,
+          (context, animation) => Container(),
+        );
+      }
+
       previousNumbers.insert(0, {
         'number': extractedNumber,
         'color': _getColorForGuessType(_guessTypeForNumber(extractedNumber)),
       });
+
+      _listKey.currentState?.insertItem(0);
     });
   }
 
@@ -154,19 +165,38 @@ class GameRoulettePageState extends State<GameRoulettePage> {
                 ),
               ),
               const SizedBox(height: 10),
-              Wrap(
-                spacing: 10,
-                runSpacing: 10,
-                alignment: WrapAlignment.center,
-                children: previousNumbers
-                    .map((entry) => Chip(
-                          label: Text(
-                            entry['number'].toString(),
-                            style: const TextStyle(color: Colors.white),
+              SizedBox(
+                height: 60,
+                child: AnimatedList(
+                  key: _listKey,
+                  initialItemCount: previousNumbers.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index, animation) {
+                    final entry = previousNumbers[index];
+                    return SizeTransition(
+                      sizeFactor: animation,
+                      axis: Axis.horizontal,
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        margin: const EdgeInsets.all(4.0),
+                        decoration: BoxDecoration(
+                          color: entry['color'],
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          entry['number'].toString(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
                           ),
-                          backgroundColor: entry['color'],
-                        ))
-                    .toList(),
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
               const SizedBox(height: 20),
             ],
