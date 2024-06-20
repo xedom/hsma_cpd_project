@@ -5,15 +5,17 @@ class CustomButton extends StatelessWidget {
   const CustomButton({
     super.key,
     required this.label,
-    required this.onPressed,
+    this.onPressed,
     this.color,
     this.textColor,
+    this.disabled = false,
   });
 
   final String label;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final Color? color;
   final Color? textColor;
+  final bool disabled;
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +23,17 @@ class CustomButton extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: color == null
             ? const LinearGradient(
-                colors: [AppColors.primary, AppColors.primaryLight],
+                colors: [
+                  AppColors.primary,
+                  AppColors.primaryLight,
+                ],
               )
             : null,
-        color: color,
+        color: color?.withOpacity(disabled ? 0.7 : 1.0),
         borderRadius: BorderRadius.circular(12),
       ),
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: disabled ? null : onPressed,
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           backgroundColor: Colors.transparent,
@@ -39,7 +44,11 @@ class CustomButton extends StatelessWidget {
         ),
         child: Text(
           label,
-          style: TextStyle(color: textColor ?? Colors.white, fontSize: 16),
+          style: TextStyle(
+            color:
+                (textColor ?? Colors.white).withOpacity(disabled ? 0.7 : 1.0),
+            fontSize: 16,
+          ),
         ),
       ),
     );
