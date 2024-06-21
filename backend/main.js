@@ -206,7 +206,7 @@ app.post('/hilo/guess', authenticate, game, async (req, res) => {
 
 	let winnings = 0;
 	if (success) {
-		winnings = utils.getWinnings(guess, bet) - bet;
+		winnings = utils.getWinnings(guess, bet, users[user].lastCard) - bet;
 		users[user].coins += bet + winnings;
 	}
 
@@ -230,3 +230,5 @@ app.get('/hilo/current-card', authenticate, async (req, res) => {
 app.listen(port, () => {
 	console.log(`Backend service listening at http://localhost:${port}`);
 });
+
+module.exports = app;
