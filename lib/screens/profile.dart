@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hsma_cpd_project/widgets/avatar.dart';
-// import 'package:hsma_cpd_project/widgets/button_primary.dart';
+import 'package:hsma_cpd_project/widgets/button_primary.dart';
 import 'package:hsma_cpd_project/widgets/button_secondary.dart';
-// import 'package:hsma_cpd_project/widgets/field_input.dart';
+import 'package:hsma_cpd_project/widgets/field_input.dart';
 import 'package:provider/provider.dart';
 import 'package:hsma_cpd_project/providers/auth.dart';
 
@@ -13,22 +13,22 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    // final TextEditingController usernameController =
-    //     TextEditingController(text: authProvider.currentUser);
-    // final TextEditingController newPasswordController = TextEditingController();
-    // final TextEditingController confirmPasswordController =
-    //     TextEditingController();
+    final TextEditingController usernameController =
+        TextEditingController(text: authProvider.currentUser);
+    final TextEditingController newPasswordController = TextEditingController();
+    final TextEditingController confirmPasswordController =
+        TextEditingController();
 
     void logout() {
       authProvider.logout();
       GoRouter.of(context).go('/login');
     }
 
-    // void saveSettings() {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     const SnackBar(content: Text('Settings saved successfully!')),
-    //   );
-    // }
+    void saveSettings() {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Settings saved successfully!')),
+      );
+    }
 
     return Scaffold(
       body: Container(
@@ -60,29 +60,29 @@ class ProfilePage extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-                // const SizedBox(height: 30),
-                // FieldInput(
-                //   hint: 'Update Username',
-                //   controller: usernameController,
-                //   icon: Icons.person,
-                // ),
-                // const SizedBox(height: 10),
-                // FieldInput(
-                //   hint: 'New Password',
-                //   controller: newPasswordController,
-                //   obscureText: true,
-                //   icon: Icons.lock,
-                // ),
-                // const SizedBox(height: 10),
-                // FieldInput(
-                //   hint: 'Confirm Password',
-                //   controller: confirmPasswordController,
-                //   obscureText: true,
-                //   icon: Icons.lock,
-                // ),
-                // const SizedBox(height: 30),
-                // PrimaryButton(text: "Save", onPressed: saveSettings),
-                // const SizedBox(height: 10),
+                const SizedBox(height: 30),
+                FieldInput(
+                  hint: 'Update Username',
+                  controller: usernameController,
+                  icon: Icons.person,
+                ),
+                const SizedBox(height: 10),
+                FieldInput(
+                  hint: 'New Password',
+                  controller: newPasswordController,
+                  obscureText: true,
+                  icon: Icons.lock,
+                ),
+                const SizedBox(height: 10),
+                FieldInput(
+                  hint: 'Confirm Password',
+                  controller: confirmPasswordController,
+                  obscureText: true,
+                  icon: Icons.lock,
+                ),
+                const SizedBox(height: 30),
+                PrimaryButton(text: "Save", onPressed: saveSettings),
+                const SizedBox(height: 10),
                 SecondaryButton(text: "Logout", onPressed: logout),
               ],
             ),

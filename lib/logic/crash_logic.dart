@@ -46,7 +46,7 @@ class GameCrashLogic with ChangeNotifier {
 
     notifyListeners();
 
-    timer = Timer.periodic(const Duration(milliseconds: 1), (timer) {
+    timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
       rocketValue += 0.01;
       if (rocketPath.length > 52) rocketPath.removeAt(0);
       rocketPath.add(Offset(
